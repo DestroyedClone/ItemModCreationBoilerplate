@@ -6,6 +6,8 @@ using System.Text;
 using UnityEngine;
 using System.Linq;
 using BepInEx.Configuration;
+using ItemModCreationBoilerplate.Modules;
+using BepInEx;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -23,9 +25,39 @@ namespace ItemModCreationBoilerplate.Equipment
     {
         public abstract string EquipmentName { get; }
         public abstract string EquipmentLangTokenName { get; }
-        public abstract string EquipmentPickupDesc { get; }
-        public abstract string EquipmentFullDescription { get; }
-        public abstract string EquipmentLore { get; }
+        public virtual string EquipmentPickupToken
+        {
+            get
+            {
+                return "RISKOFBULLETSTORM_EQUIPMENT_" + EquipmentLangTokenName + "_PICKUP";
+            }
+        }
+        /// <summary>
+        /// Optional parameters for the Equipment Pickup Token
+        /// </summary>
+        public virtual string[] EquipmentPickupDescParams { get; }
+        public virtual string EquipmentDescriptionToken
+        {
+            get
+            {
+                return "RISKOFBULLETSTORM_EQUIPMENT_" + EquipmentLangTokenName + "_DESCRIPTION";
+            }
+        }
+        /// <summary>
+        /// Optional parameters for the Equipment Description Token
+        /// </summary>
+        public virtual string[] EquipmentFullDescriptionParams { get; }
+        /// <summary>
+        /// Primary Token for language.
+        /// <para>Ex: "GAWK" => used in RBS_GAWK_NAME, RBS_GAWK_DESC, ETC</para>
+        /// </summary>
+        public virtual string EquipmentUniquePickupToken { get; }
+
+        /// <summary>
+        /// Primary Token for language.
+        /// <para>Ex: "GAWK" => used in RBS_GAWK_NAME, RBS_GAWK_DESC, ETC</para>
+        /// </summary>
+        public virtual string EquipmentUniqueDescriptionToken { get; }
 
         public abstract GameObject EquipmentModel { get; }
         public abstract Sprite EquipmentIcon { get; }
@@ -43,10 +75,25 @@ namespace ItemModCreationBoilerplate.Equipment
         public virtual bool IsBoss { get; } = false;
 
         public virtual bool IsLunar { get; } = false;
+        /// <summary>
+        /// Can be randomly triggered by things such as Bottled Chaos
+        /// </summary>
+        public virtual bool CanBeRandomlyTriggered { get; } = true;
+        public virtual Equipment.EquipmentBase DependentEquipment { get; } = null;
+        /// <summary>
+        /// The internal name of its parent equipment, so that when its Parent is disabled, so too will it as a child.
+        /// <para>Ex: AppleConsumed has its ParentEquipmentName as "Apple". AppleConsumed loses its ability to be disabled and requires
+        /// Apple to be disabled.</para>
+        /// </summary>
+        public virtual string ParentEquipmentName { get; } = null;
 
         public EquipmentDef EquipmentDef;
+        public GameObject ItemBodyModelPrefab;
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
+
+        public virtual UnlockableDef UnlockableDef { get; set; } = null;
+        public virtual bool UnlockableDefAutoSetup { get; } = false;
 
         /// <summary>
         /// This method structures your code execution of this class. An example implementation inside of it would be:
@@ -60,6 +107,13 @@ namespace ItemModCreationBoilerplate.Equipment
         /// <param name="config">The config file that will be passed into this from the main class.</param>
         public abstract void Init(ConfigFile config);
 
+        public string ConfigCategory
+        {
+            get
+            {
+                return "Equipment: " + EquipmentName;
+            }
+        }
         protected virtual void CreateConfig(ConfigFile config){}
 
 
@@ -67,21 +121,51 @@ namespace ItemModCreationBoilerplate.Equipment
         /// Take care to call base.CreateLang()!
         /// </summary>
         protected virtual void CreateLang()
-        {
-            LanguageAPI.Add("EQUIPMENT_" + EquipmentLangTokenName + "_NAME", EquipmentName);
-            LanguageAPI.Add("EQUIPMENT_" + EquipmentLangTokenName + "_PICKUP", EquipmentPickupDesc);
-            LanguageAPI.Add("EQUIPMENT_" + EquipmentLangTokenName + "_DESCRIPTION", EquipmentFullDescription);
-            LanguageAPI.Add("EQUIPMENT_" + EquipmentLangTokenName + "_LORE", EquipmentLore);
+        {//Main._logger.LogMessage($"{EquipmentName} CreateLang()");
+            bool formatPickup = EquipmentPickupDescParams?.Length > 0;
+            //Main._logger.LogMessage("pickupCheck");
+            bool formatDescription = EquipmentFullDescriptionParams?.Length > 0; //https://stackoverflow.com/a/41596301
+            //Main._logger.LogMessage("descCheck");
+            if (formatDescription && formatPickup)
+            {
+                //Main._logger.LogMessage("Nothing to format.");
+                return;
+            }
+
+            if (formatPickup)
+            {
+                if (EquipmentUniquePickupToken.IsNullOrWhiteSpace())
+                {
+                    LanguageOverrides.DeferToken(EquipmentPickupToken, EquipmentPickupDescParams);
+                }
+                else
+                {
+                    LanguageOverrides.DeferUniqueToken(EquipmentUniquePickupToken, EquipmentPickupToken, EquipmentPickupDescParams);
+                }
+            }
+
+            if (formatDescription)
+            {
+                if (EquipmentUniqueDescriptionToken.IsNullOrWhiteSpace())
+                {
+                    LanguageOverrides.DeferToken(EquipmentDescriptionToken, EquipmentFullDescriptionParams);
+                }
+                else
+                {
+                    LanguageOverrides.DeferUniqueToken(EquipmentUniqueDescriptionToken, EquipmentDescriptionToken, EquipmentFullDescriptionParams);
+                }
+            }
         }
 
         protected void CreateEquipment()
         {
+            var prefix = "RISKOFBULLETSTORM_EQUIPMENT_";
             EquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
-            EquipmentDef.name = "EQUIPMENT_" + EquipmentLangTokenName;
-            EquipmentDef.nameToken = "EQUIPMENT_" + EquipmentLangTokenName + "_NAME";
-            EquipmentDef.pickupToken = "EQUIPMENT_" + EquipmentLangTokenName + "_PICKUP";
-            EquipmentDef.descriptionToken = "EQUIPMENT_" + EquipmentLangTokenName + "_DESCRIPTION";
-            EquipmentDef.loreToken = "EQUIPMENT_" + EquipmentLangTokenName + "_LORE";
+            EquipmentDef.name = prefix + EquipmentLangTokenName;
+            EquipmentDef.nameToken = prefix + EquipmentLangTokenName + "_NAME";
+            EquipmentDef.pickupToken = EquipmentPickupToken;
+            EquipmentDef.descriptionToken = EquipmentDescriptionToken;
+            EquipmentDef.loreToken = prefix + EquipmentLangTokenName + "_LORE";
             EquipmentDef.pickupModelPrefab = EquipmentModel;
             EquipmentDef.pickupIconSprite = EquipmentIcon;
             EquipmentDef.appearsInSinglePlayer = AppearsInSinglePlayer;
@@ -91,6 +175,20 @@ namespace ItemModCreationBoilerplate.Equipment
             EquipmentDef.enigmaCompatible = EnigmaCompatible;
             EquipmentDef.isBoss = IsBoss;
             EquipmentDef.isLunar = IsLunar;
+            EquipmentDef.canBeRandomlyTriggered = CanBeRandomlyTriggered;
+
+            if (IsLunar)
+            {
+                EquipmentDef.colorIndex = ColorCatalog.ColorIndex.LunarItem;
+            }
+
+            if (UnlockableDefAutoSetup)
+                UnlockableDef = Assets.CreateUnlockableDef("Equipment." + EquipmentLangTokenName, EquipmentDef.pickupIconSprite);
+            if (UnlockableDef != null)
+            {
+                ContentAddition.AddUnlockableDef(UnlockableDef);
+                EquipmentDef.unlockableDef = UnlockableDef;
+            }
 
             ItemAPI.Add(new CustomEquipment(EquipmentDef, CreateItemDisplayRules()));
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformEquipmentAction;
@@ -109,6 +207,17 @@ namespace ItemModCreationBoilerplate.Equipment
         }
 
         protected abstract bool ActivateEquipment(EquipmentSlot slot);
+        public Sprite LoadSprite(string equipmentNameToken = "")
+        {
+            var token = equipmentNameToken == "" ? EquipmentLangTokenName : equipmentNameToken;
+            return Assets.LoadSprite($"EQUIPMENT_{token}");
+        }
+
+        public GameObject LoadModel(string equipmentNameToken = "")
+        {
+            var token = equipmentNameToken == "" ? EquipmentLangTokenName : equipmentNameToken;
+            return Assets.LoadObject($"{token}.prefab");
+        }
 
         public virtual void Hooks() { }
 

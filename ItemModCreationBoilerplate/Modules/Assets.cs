@@ -1,0 +1,107 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Text;
+using UnityEngine;
+using RoR2;
+using UnityEngine.AddressableAssets;
+using System.Reflection;
+
+namespace ItemModCreationBoilerplate.Modules
+{
+    internal class Assets
+    {
+        internal const string unlockableDefPrefix = "ItemMod.";
+        internal const string unlockableDefItemPrefix = "ItemMod.";
+        internal const string unlockableDefEquipmentPrefix = "ItemMod.";
+
+        internal static GameObject NullModel = LoadAsset<GameObject>("RoR2/Base/Core/NullModel.prefab");
+        internal static Sprite NullSprite = LoadAsset<Sprite>("RoR2/Base/Core/texNullIcon.png");
+
+        internal static ItemTierDef itemLunarTierDef = LoadAsset<ItemTierDef>("RoR2/Base/Common/LunarTierDef.asset");
+        internal static ItemTierDef itemBossTierDef = LoadAsset<ItemTierDef>("RoR2/Base/Common/BossTierDef.asset");
+        internal static ItemTierDef itemTier1Def = LoadAsset<ItemTierDef>("RoR2/Base/Common/Tier1Def.asset");
+        internal static ItemTierDef itemTier2Def = LoadAsset<ItemTierDef>("RoR2/Base/Common/Tier2Def.asset");
+        internal static ItemTierDef itemTier3Def = LoadAsset<ItemTierDef>("RoR2/Base/Common/Tier3Def.asset");
+        internal static ItemTierDef itemVoidBossTierDef = LoadAsset<ItemTierDef>("RoR2/DLC1/Common/VoidBossDef.asset");
+        internal static ItemTierDef itemVoidTier1Def = LoadAsset<ItemTierDef>("RoR2/DLC1/Common/VoidTier1Def.asset");
+        internal static ItemTierDef itemVoidTier2Def = LoadAsset<ItemTierDef>("RoR2/DLC1/Common/VoidTier2Def.asset");
+        internal static ItemTierDef itemVoidTier3Def = LoadAsset<ItemTierDef>("RoR2/DLC1/Common/VoidTier3Def.asset");
+
+        public static ItemTierDef ResolveTierDef(ItemTier itemTier)
+        {
+            switch (itemTier)
+            {
+                case ItemTier.AssignedAtRuntime:
+                    return null;
+
+                case ItemTier.Boss:
+                    return itemBossTierDef;
+
+                case ItemTier.Lunar:
+                    return itemLunarTierDef;
+
+                case ItemTier.NoTier:
+                    return null;
+
+                case ItemTier.Tier1:
+                    return itemTier1Def;
+
+                case ItemTier.Tier2:
+                    return itemTier2Def;
+
+                case ItemTier.Tier3:
+                    return itemTier3Def;
+
+                case ItemTier.VoidBoss:
+                    return itemVoidBossTierDef;
+
+                case ItemTier.VoidTier1:
+                    return itemVoidTier1Def;
+
+                case ItemTier.VoidTier2:
+                    return itemVoidTier2Def;
+
+                case ItemTier.VoidTier3:
+                    return itemVoidTier3Def;
+            }
+            return null;
+        }
+        public static AssetBundle mainAssetBundle;
+        public static T LoadAsset<T>(string path)
+        {
+            return Addressables.LoadAssetAsync<T>(path).WaitForCompletion();
+        }
+
+        public static UnlockableDef CreateUnlockableDef(string name, Sprite icon = null)
+        {
+            UnlockableDef unlockableDef = ScriptableObject.CreateInstance<UnlockableDef>();
+            unlockableDef.achievementIcon = icon;
+            unlockableDef.cachedName = unlockableDefPrefix+name;
+            return unlockableDef;
+        }
+
+        public static void Init()
+        {
+            PopulateAssets();
+        }
+        public static void PopulateAssets()
+        {
+            if (mainAssetBundle == null)
+            {
+                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RiskOfBulletstormRewrite.riskofbulletstormbundle"))
+                {
+                    mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
+                }
+            }
+        }
+        public static Sprite LoadSprite(string path)
+        {
+            return mainAssetBundle.LoadAsset<Sprite>(path);
+        }
+
+        public static GameObject LoadObject(string path)
+        {
+            return mainAssetBundle.LoadAsset<GameObject>(path);
+        }
+    }
+}

@@ -15,4 +15,13 @@
 	<PackageReference Include="RiskOfRain2.GameLibs" Version="1.2.4-r.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Reference Include="BetterUI">
+      <HintPath>lib\BetterUI.dll</HintPath>
+    </Reference>
+    <Reference Include="BetterUnityPlugin">
+      <HintPath>lib\BetterUnityPlugin.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
 </Project>

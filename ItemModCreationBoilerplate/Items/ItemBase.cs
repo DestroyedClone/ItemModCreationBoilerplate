@@ -29,9 +29,31 @@ namespace ItemModCreationBoilerplate.Items
     {
         public abstract string ItemName { get; }
         public abstract string ItemLangTokenName { get; }
-        public abstract string ItemPickupDesc { get; }
-        public abstract string ItemFullDescription { get; }
-        public abstract string ItemLore { get; }
+        public string ItemPickupToken
+        {
+            get
+            {
+                return LanguageOverrides.LanguageTokenPrefix + "ITEM_" + ItemLangTokenName + "_PICKUP";
+            }
+        }
+        public virtual string[] ItemPickupDescParams { get; }
+        public string ItemDescriptionToken
+        {
+            get
+            {
+                return LanguageOverrides.LanguageTokenPrefix + "ITEM_" + ItemLangTokenName + "_DESCRIPTION";
+            }
+        }
+        public virtual string[] ItemFullDescriptionParams { get; }
+
+        public virtual string ItemDescriptionLogbookToken
+        {
+            get
+            {
+                return LanguageOverrides.LanguageTokenPrefix + "ITEM_" + ItemLangTokenName + "_LOGBOOK_DESCRIPTION";
+            }
+        }
+        public virtual string[] ItemLogbookDescriptionParams { get; }
 
         public abstract ItemTier Tier { get; }
         public virtual ItemTag[] ItemTags { get; set; } = new ItemTag[] { };
@@ -46,6 +68,17 @@ namespace ItemModCreationBoilerplate.Items
         public virtual bool CanRemove { get; } = true;
 
         public virtual bool AIBlacklisted { get; set; } = false;
+        public virtual string ParentEquipmentName { get; } = null;
+        public virtual string ParentItemName { get; } = null;
+        public virtual bool Hidden { get; } = false;
+        public virtual bool ItemDescriptionLogbookOverride { get; } = false;
+        public string ConfigCategory
+        {
+            get
+            {
+                return "Item: " + ItemName;
+            }
+        }
 
         /// <summary>
         /// This method structures your code execution of this class. An example implementation inside of it would be:
@@ -61,12 +94,36 @@ namespace ItemModCreationBoilerplate.Items
 
         public virtual void CreateConfig(ConfigFile config) { }
 
-        protected virtual void CreateLang()
+        protected virtual void CreateLang() //create lang (addtokens for nwo) -> modify lang (this will be kept later)
         {
-            LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_NAME", ItemName);
-            LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_PICKUP", ItemPickupDesc);
-            LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_DESCRIPTION", ItemFullDescription);
-            LanguageAPI.Add("ITEM_" + ItemLangTokenName + "_LORE", ItemLore);
+            bool formatPickup = ItemPickupDescParams?.Length > 0;
+            bool formatDescription = ItemFullDescriptionParams?.Length > 0; //https://stackoverflow.com/a/41596301
+            bool formatLogbook = ItemLogbookDescriptionParams?.Length > 0;
+            if (!formatDescription && !formatPickup && !formatLogbook)
+            {
+                //Main._logger.LogMessage("Nothing to format.");
+                return;
+            }
+
+            if (formatPickup)
+            {
+                LanguageOverrides.DeferToken(ItemPickupToken, ItemPickupDescParams);
+            }
+
+            if (formatDescription)
+            {
+                LanguageOverrides.DeferToken(ItemDescriptionToken, ItemFullDescriptionParams);
+            }
+
+            if (formatLogbook)
+            {
+                LanguageOverrides.DeferToken(ItemDescriptionLogbookToken, ItemLogbookDescriptionParams);
+            }
+
+            if (ItemDescriptionLogbookOverride || formatLogbook)
+            {
+                LanguageOverrides.logbookTokenOverrideDict.Add(ItemDescriptionToken, ItemDescriptionLogbookToken);
+            }
         }
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
@@ -77,15 +134,16 @@ namespace ItemModCreationBoilerplate.Items
                 ItemTags = new List<ItemTag>(ItemTags) { ItemTag.AIBlacklist }.ToArray();
             }
 
+            var prefix = "RISKOFBULLETSTORM_ITEM_";
             ItemDef = ScriptableObject.CreateInstance<ItemDef>();
-            ItemDef.name = "ITEM_" + ItemLangTokenName;
-            ItemDef.nameToken = "ITEM_" + ItemLangTokenName + "_NAME";
-            ItemDef.pickupToken = "ITEM_" + ItemLangTokenName + "_PICKUP";
-            ItemDef.descriptionToken = "ITEM_" + ItemLangTokenName + "_DESCRIPTION";
-            ItemDef.loreToken = "ITEM_" + ItemLangTokenName + "_LORE";
+            ItemDef.name = prefix + ItemLangTokenName;
+            ItemDef.nameToken = prefix + ItemLangTokenName + "_NAME";
+            ItemDef.pickupToken = prefix + ItemLangTokenName + "_PICKUP";
+            ItemDef.descriptionToken = prefix + ItemLangTokenName + "_DESCRIPTION";
+            ItemDef.loreToken = prefix + ItemLangTokenName + "_LORE";
             ItemDef.pickupModelPrefab = ItemModel;
             ItemDef.pickupIconSprite = ItemIcon;
-            ItemDef.hidden = false;
+            ItemDef.hidden = Hidden;
             ItemDef.canRemove = CanRemove;
             ItemDef.deprecatedTier = Tier;
 
@@ -128,6 +186,17 @@ namespace ItemModCreationBoilerplate.Items
             if (!body || !body.inventory) { return 0; }
 
             return body.inventory.GetItemCount(itemDef);
+        }
+        public Sprite LoadSprite(string itemNameToken = "")
+        {
+            var token = itemNameToken == "" ? ItemLangTokenName : itemNameToken;
+            return Assets.LoadSprite($"ITEM_{token}");
+        }
+
+        public GameObject LoadModel(string itemNameToken = "")
+        {
+            var token = itemNameToken == "" ? ItemLangTokenName : itemNameToken;
+            return Assets.LoadObject($"{token}.prefab");
         }
     }
 }

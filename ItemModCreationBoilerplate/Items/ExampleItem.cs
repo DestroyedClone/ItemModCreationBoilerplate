@@ -12,17 +12,11 @@ namespace ItemModCreationBoilerplate.Items
 
         public override string ItemLangTokenName => "DEPRECATE_ME_ITEM";
 
-        public override string ItemPickupDesc => "";
-
-        public override string ItemFullDescription => "";
-
-        public override string ItemLore => "";
-
         public override ItemTier Tier => ItemTier.Tier1;
 
-        public override GameObject ItemModel => MainAssets.LoadAsset<GameObject>("ExampleItemPrefab.prefab");
+        public override GameObject ItemModel => LoadModel();
 
-        public override Sprite ItemIcon => MainAssets.LoadAsset<Sprite>("ExampleItemIcon.png");
+        public override Sprite ItemIcon => LoadSprite();
 
         public override void Init(ConfigFile config)
         {

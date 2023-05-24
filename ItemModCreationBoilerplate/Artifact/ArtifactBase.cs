@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using ItemModCreationBoilerplate.Modules;
 using R2API;
 using RoR2;
 using System;
@@ -21,35 +22,87 @@ namespace ItemModCreationBoilerplate.Artifact
 
     public abstract class ArtifactBase
     {
+        ///<summary>
+        ///English name of the artifact.
+        ///</summary>
         public abstract string ArtifactName { get; }
 
+        ///<summary>
+        ///Language Token responsible for the localization.
+        ///</summary>
         public abstract string ArtifactLangTokenName { get; }
+        ///<summary>
+        ///The auto-generated token for the description.
+        ///</summary>
+        public string ArtifactDescriptionToken
+        {
+            get
+            {
+                return "RISKOFBULLETSTORM_ARTIFACT_" + ArtifactLangTokenName + "_DESCRIPTION";
+            }
+        }
 
-        public abstract string ArtifactDescription { get; }
+        ///<summary>
+        ///Parameters for formatting the description language token.
+        ///</summary>
+        public virtual string[] ArtifactFullDescriptionParams { get; }
 
+        ///<summary>
+        ///The icon to use for the artifact when it's enabled.
+        ///</summary>
         public abstract Sprite ArtifactEnabledIcon { get; }
 
+        ///<summary>
+        ///The icon to use for the artifact when it's disabled.
+        ///</summary>
         public abstract Sprite ArtifactDisabledIcon { get; }
 
+        ///<summary>
+        ///The ArtifactDef for the Artifact.
+        ///</summary>
         public ArtifactDef ArtifactDef;
+
+        ///<summary>
+        ///The auto-generated category for the config.
+        ///</summary>
+        public string ConfigCategory
+        {
+            get
+            {
+                return "Artifact: " + ArtifactName;
+            }
+        }
 
         //For use only after the run has started.
         public bool ArtifactEnabled => RunArtifactManager.instance.IsArtifactEnabled(ArtifactDef);
 
         public abstract void Init(ConfigFile config);
 
+        ///<summary>
+        ///Method responsible for creating and deferring the language tokens.
+        ///</summary>
         protected void CreateLang()
         {
-            LanguageAPI.Add("ARTIFACT_" + ArtifactLangTokenName + "_NAME", ArtifactName);
-            LanguageAPI.Add("ARTIFACT_" + ArtifactLangTokenName + "_DESCRIPTION", ArtifactDescription);
+            //Main._logger.LogMessage($"{ArtifactName} CreateLang()");
+            bool formatDescription = ArtifactFullDescriptionParams?.Length > 0; //https://stackoverflow.com/a/41596301
+            //Main._logger.LogMessage("descCheck");
+            if (formatDescription)
+            {
+                LanguageOverrides.DeferToken(ArtifactDescriptionToken, ArtifactFullDescriptionParams);
+                return;
+            }
         }
 
+        ///<summary>
+        ///Method to create the artifact.
+        ///</summary>
         protected void CreateArtifact()
         {
+            var prefix = "RISKOFBULLETSTORM_ARTIFACT_";
             ArtifactDef = ScriptableObject.CreateInstance<ArtifactDef>();
-            ArtifactDef.cachedName = "ARTIFACT_" + ArtifactLangTokenName;
-            ArtifactDef.nameToken = "ARTIFACT_" + ArtifactLangTokenName + "_NAME";
-            ArtifactDef.descriptionToken = "ARTIFACT_" + ArtifactLangTokenName + "_DESCRIPTION";
+            ArtifactDef.cachedName = prefix + ArtifactLangTokenName;
+            ArtifactDef.nameToken = prefix + ArtifactLangTokenName + "_NAME";
+            ArtifactDef.descriptionToken = prefix + ArtifactLangTokenName + "_DESCRIPTION";
             ArtifactDef.smallIconSelectedSprite = ArtifactEnabledIcon;
             ArtifactDef.smallIconDeselectedSprite = ArtifactDisabledIcon;
 
@@ -57,5 +110,13 @@ namespace ItemModCreationBoilerplate.Artifact
         }
 
         public abstract void Hooks();
+
+        public Sprite LoadSprite(bool enabled)
+        {
+            return Assets.LoadSprite(
+            "Assets/Icons/ARTIFACT_" + ArtifactLangTokenName
+            + (enabled ? "_ENABLED" : "_DISABLED") + ".png"
+            );
+        }
     }
 }

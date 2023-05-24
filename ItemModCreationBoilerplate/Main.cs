@@ -3,6 +3,7 @@ using ItemModCreationBoilerplate.Artifact;
 using ItemModCreationBoilerplate.Equipment;
 using ItemModCreationBoilerplate.Equipment.EliteEquipment;
 using ItemModCreationBoilerplate.Items;
+using ItemModCreationBoilerplate.Modules;
 using R2API;
 using R2API.Utils;
 using System;
@@ -15,6 +16,7 @@ namespace ItemModCreationBoilerplate
 {
     [BepInPlugin(ModGuid, ModName, ModVer)]
     [BepInDependency(R2API.R2API.PluginGUID, R2API.R2API.PluginVersion)]
+    [BepInDependency("com.xoxfaby.BetterUI", BepInDependency.DependencyFlags.SoftDependency)]
     [NetworkCompatibility(CompatibilityLevel.EveryoneMustHaveMod, VersionStrictness.EveryoneNeedSameModVersion)]
     [R2APISubmoduleDependency(nameof(ItemAPI), nameof(LanguageAPI), nameof(EliteAPI))]
     public class Main : BaseUnityPlugin
@@ -22,8 +24,6 @@ namespace ItemModCreationBoilerplate
         public const string ModGuid = "com.MyUsername.MyModName";
         public const string ModName = "My Mod's Title and if we see this exact name on Thunderstore we will deprecate your mod";
         public const string ModVer = "0.0.1";
-
-        public static AssetBundle MainAssets;
 
         public List<ArtifactBase> Artifacts = new List<ArtifactBase>();
         public List<ItemBase> Items = new List<ItemBase>();
@@ -40,11 +40,7 @@ namespace ItemModCreationBoilerplate
             // Don't know how to create/use an asset bundle, or don't have a unity project set up?
             // Look here for info on how to set these up: https://github.com/KomradeSpectre/AetheriumMod/blob/rewrite-master/Tutorials/Item%20Mod%20Creation.md#unity-project
             // (This is a bit old now, but the information on setting the unity asset bundle should be the same.)
-
-            using (var stream = Assembly.GetExecutingAssembly().GetManifestResourceStream("ItemModCreationBoilerplate.my_assetbundlefile"))
-            {
-                MainAssets = AssetBundle.LoadFromStream(stream);
-            }
+            Assets.Init();
 
             //This section automatically scans the project for all artifacts
             var ArtifactTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ArtifactBase)));

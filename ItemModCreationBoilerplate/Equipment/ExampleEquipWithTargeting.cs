@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using ItemModCreationBoilerplate.Modules;
 using R2API;
 using RoR2;
 using System.Linq;
@@ -13,15 +14,9 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public override string EquipmentLangTokenName => "DEPRECATE_ME_EQUIPMENT_TARGETING";
 
-        public override string EquipmentPickupDesc => "";
+        public override GameObject EquipmentModel => LoadModel();
 
-        public override string EquipmentFullDescription => "";
-
-        public override string EquipmentLore => "";
-
-        public override GameObject EquipmentModel => MainAssets.LoadAsset<GameObject>("ExampleEquipmentPrefab.prefab");
-
-        public override Sprite EquipmentIcon => MainAssets.LoadAsset<Sprite>("ExampleEquipmentIcon.png");
+        public override Sprite EquipmentIcon => LoadSprite();
 
         public override void Init(ConfigFile config)
         {
@@ -44,7 +39,7 @@ namespace ItemModCreationBoilerplate.Equipment
         private void CreateTargetingIndicator()
         {
             TargetingIndicatorPrefabBase = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/WoodSpriteIndicator"), "ExampleIndicator", false);
-            TargetingIndicatorPrefabBase.GetComponentInChildren<SpriteRenderer>().sprite = MainAssets.LoadAsset<Sprite>("ExampleReticuleIcon.png");
+            TargetingIndicatorPrefabBase.GetComponentInChildren<SpriteRenderer>().sprite = Assets.LoadSprite("ExampleReticuleIcon.png");
             TargetingIndicatorPrefabBase.GetComponentInChildren<SpriteRenderer>().color = Color.white;
             TargetingIndicatorPrefabBase.GetComponentInChildren<SpriteRenderer>().transform.rotation = Quaternion.identity;
             TargetingIndicatorPrefabBase.GetComponentInChildren<TMPro.TextMeshPro>().color = new Color(0.423f, 1, 0.749f);

@@ -12,15 +12,9 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public override string EquipmentLangTokenName => "DEPRECATE_ME_EQUIPMENT";
 
-        public override string EquipmentPickupDesc => "";
+        public override GameObject EquipmentModel => LoadModel();
 
-        public override string EquipmentFullDescription => "";
-
-        public override string EquipmentLore => "";
-
-        public override GameObject EquipmentModel => MainAssets.LoadAsset<GameObject>("ExampleEquipmentPrefab.prefab");
-
-        public override Sprite EquipmentIcon => MainAssets.LoadAsset<Sprite>("ExampleEquipmentIcon.png");
+        public override Sprite EquipmentIcon => LoadSprite();
 
         public override void Init(ConfigFile config)
         {
