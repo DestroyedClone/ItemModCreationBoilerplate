@@ -1,4 +1,5 @@
 ﻿using BepInEx.Configuration;
+using ItemModCreationBoilerplate.Modules;
 using R2API;
 using RoR2;
 using System;
@@ -39,6 +40,8 @@ namespace ItemModCreationBoilerplate.Items
         public abstract Sprite ItemIcon { get; }
 
         public ItemDef ItemDef;
+
+        public virtual ItemDef ContagiousOwnerItemDef { get; } = null;
 
         public virtual bool CanRemove { get; } = true;
 
@@ -85,6 +88,18 @@ namespace ItemModCreationBoilerplate.Items
             ItemDef.hidden = false;
             ItemDef.canRemove = CanRemove;
             ItemDef.deprecatedTier = Tier;
+
+            if (Tier == ItemTier.VoidTier1
+            || Tier == ItemTier.VoidTier2
+            || Tier == ItemTier.VoidTier3
+            || Tier == ItemTier.VoidBoss)
+            {
+                ItemDef.requiredExpansion = Modules.DLCSupport.DLC1.GetSOTVExpansionDef();
+                if (ContagiousOwnerItemDef)
+                {
+                    DLCSupport.DLC1.voidConversions.Add(ContagiousOwnerItemDef, ItemDef);
+                }
+            }
 
             if (ItemTags.Length > 0) { ItemDef.tags = ItemTags; }
 

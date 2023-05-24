@@ -19,3 +19,7 @@ There are a variety of ways you can utilize this boilerplate, but the easiest on
 **ThinkInvisible**- Most of what I had learned to put this project together came from what I learned from ThinkInvisible's TILER2 api. It's a great API for starters.
 
 **Harb** - Providing additional functionality to this template, like the type search that automatically detects types of any of the bases in this template.
+
+## Additional Credit
+
+**khouryj** - Void Item Conversion code [Link](https://risk-of-thunder.github.io/R2Wiki/Mod-Creation/Assets/Void-Items/)
