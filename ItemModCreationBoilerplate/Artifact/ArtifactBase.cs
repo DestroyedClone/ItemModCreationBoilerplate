@@ -2,6 +2,7 @@
 using ItemModCreationBoilerplate.Modules;
 using R2API;
 using RoR2;
+using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -46,6 +47,11 @@ namespace ItemModCreationBoilerplate.Artifact
         ///Parameters for formatting the description language token.
         ///</summary>
         public virtual string[] ArtifactFullDescriptionParams { get; }
+
+        ///<summary>
+        ///The required ExpansionDef for this artifact.
+        ///</summary>
+        public virtual ExpansionDef ArtifactExpansionDef { get; }
 
         ///<summary>
         ///The icon to use for the artifact when it's enabled.
@@ -105,6 +111,10 @@ namespace ItemModCreationBoilerplate.Artifact
             ArtifactDef.descriptionToken = prefix + ArtifactLangTokenName + "_DESCRIPTION";
             ArtifactDef.smallIconSelectedSprite = ArtifactEnabledIcon;
             ArtifactDef.smallIconDeselectedSprite = ArtifactDisabledIcon;
+            if (ArtifactExpansionDef)
+            {
+                ArtifactDef.requiredExpansion = ArtifactExpansionDef;
+            }
 
             ContentAddition.AddArtifactDef(ArtifactDef);
         }
