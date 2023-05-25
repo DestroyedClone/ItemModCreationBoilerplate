@@ -23,31 +23,16 @@ namespace ItemModCreationBoilerplate.Artifact
         {
             CreateLang();
             CreateArtifact();
-            Hooks();
         }
 
-        public override void Hooks()
+        public override void OnArtifactEnabled()
         {
-            RunArtifactManager.onArtifactEnabledGlobal += RunArtifactManager_onArtifactEnabledGlobal;
-            RunArtifactManager.onArtifactDisabledGlobal += RunArtifactManager_onArtifactDisabledGlobal;
-        }
-
-        private void RunArtifactManager_onArtifactDisabledGlobal([JetBrains.Annotations.NotNull] RunArtifactManager runArtifactManager, [JetBrains.Annotations.NotNull] ArtifactDef artifactDef)
-        {
-            if (artifactDef != ArtifactDef)
-            {
-                return;
-            }
-            CharacterMaster.onStartGlobal -= PrintMessage;
-        }
-
-        private void RunArtifactManager_onArtifactEnabledGlobal([JetBrains.Annotations.NotNull] RunArtifactManager runArtifactManager, [JetBrains.Annotations.NotNull] ArtifactDef artifactDef)
-        {
-            if (artifactDef != ArtifactDef)
-            {
-                return;
-            }
             CharacterMaster.onStartGlobal += PrintMessage;
+        }
+
+        public override void OnArtifactDisabled()
+        {
+            CharacterMaster.onStartGlobal -= PrintMessage;
         }
 
         private void PrintMessage(CharacterMaster characterMaster)

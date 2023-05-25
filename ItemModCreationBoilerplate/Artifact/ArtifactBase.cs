@@ -117,7 +117,30 @@ namespace ItemModCreationBoilerplate.Artifact
             }
 
             ContentAddition.AddArtifactDef(ArtifactDef);
+            RunArtifactManager.onArtifactEnabledGlobal += RunArtifactManager_onArtifactEnabledGlobal;
+            RunArtifactManager.onArtifactDisabledGlobal += RunArtifactManager_onArtifactDisabledGlobal;
         }
+
+        private void RunArtifactManager_onArtifactEnabledGlobal([JetBrains.Annotations.NotNull] RunArtifactManager runArtifactManager, [JetBrains.Annotations.NotNull] ArtifactDef artifactDef)
+        {
+            if (artifactDef != ArtifactDef)
+            {
+                return;
+            }
+            OnArtifactEnabled();
+        }
+
+        private void RunArtifactManager_onArtifactDisabledGlobal([JetBrains.Annotations.NotNull] RunArtifactManager runArtifactManager, [JetBrains.Annotations.NotNull] ArtifactDef artifactDef)
+        {
+            if (artifactDef != ArtifactDef)
+            {
+                return;
+            }
+            OnArtifactDisabled();
+        }
+
+        public abstract void OnArtifactEnabled();
+        public abstract void OnArtifactDisabled();
 
         public abstract void Hooks();
 
