@@ -24,6 +24,8 @@ namespace ItemModCreationBoilerplate
         public const string ModGuid = "com.MyUsername.MyModName";
         public const string ModName = "My Mod's Title and if we see this exact name on Thunderstore we will deprecate your mod";
         public const string ModVer = "0.0.1";
+        //For RiskOfOptions
+        public const string ModDescription = "Mod Description";
 
         public List<ArtifactBase> Artifacts = new List<ArtifactBase>();
         public List<ItemBase> Items = new List<ItemBase>();

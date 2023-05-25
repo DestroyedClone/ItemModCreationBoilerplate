@@ -6,21 +6,26 @@ namespace ItemModCreationBoilerplate
 {
     internal class ModSupport
     {
-        internal static bool betterUILoaded = false;
         internal static void CheckForModSupport()
         {
             if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(ModCompatBetterUI.guid))
             {
-                betterUILoaded = true;
                 ModCompatBetterUI.Init();
+            }
+            if (BepInEx.Bootstrap.Chainloader.PluginInfos.ContainsKey(ModCompatRiskOfOptions.guid))
+            {
+                ModCompatRiskOfOptions.Init();
             }
         }
         internal class ModCompatBetterUI
         {
             public const string guid = "com.xoxfaby.BetterUI";
+            internal static bool loaded = false;
 
+            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
             internal static void Init()
             {
+                loaded = true;
                 BetterUICompat_ItemStats();
                 BetterUICompat_Buffs();
             }
@@ -44,6 +49,19 @@ namespace ItemModCreationBoilerplate
             internal static void BetterUICompat_ItemStats()
             {
 
+            }
+        }
+        internal class ModCompatRiskOfOptions
+        {
+            internal const string guid = "com.rune580.riskofoptions";
+            internal static bool loaded = false;
+
+            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+            internal static void Init()
+            {
+                loaded = true;
+
+                RiskOfOptions.ModSettingsManager.SetModDescription(Main.ModDescription, Main.ModGuid, Main.ModName);
             }
         }
     }

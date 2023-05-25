@@ -22,6 +22,9 @@
     <Reference Include="BetterUnityPlugin">
       <HintPath>lib\BetterUnityPlugin.dll</HintPath>
     </Reference>
+    <Reference Include="RiskOfOptions">
+      <HintPath>lib\RiskOfOptions.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
