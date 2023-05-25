@@ -98,7 +98,7 @@ namespace ItemModCreationBoilerplate.Artifact
         ///</summary>
         protected void CreateArtifact()
         {
-            var prefix = "RISKOFBULLETSTORM_ARTIFACT_";
+            var prefix = LanguageOverrides.LanguageTokenPrefixArtifact;
             ArtifactDef = ScriptableObject.CreateInstance<ArtifactDef>();
             ArtifactDef.cachedName = prefix + ArtifactLangTokenName;
             ArtifactDef.nameToken = prefix + ArtifactLangTokenName + "_NAME";

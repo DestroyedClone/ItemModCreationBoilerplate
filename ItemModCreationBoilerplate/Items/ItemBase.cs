@@ -134,7 +134,7 @@ namespace ItemModCreationBoilerplate.Items
                 ItemTags = new List<ItemTag>(ItemTags) { ItemTag.AIBlacklist }.ToArray();
             }
 
-            var prefix = "RISKOFBULLETSTORM_ITEM_";
+            var prefix = LanguageOverrides.LanguageTokenPrefixItem;
             ItemDef = ScriptableObject.CreateInstance<ItemDef>();
             ItemDef.name = prefix + ItemLangTokenName;
             ItemDef.nameToken = prefix + ItemLangTokenName + "_NAME";

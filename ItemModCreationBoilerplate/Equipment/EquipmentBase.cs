@@ -159,7 +159,7 @@ namespace ItemModCreationBoilerplate.Equipment
 
         protected void CreateEquipment()
         {
-            var prefix = "RISKOFBULLETSTORM_EQUIPMENT_";
+            var prefix = LanguageOverrides.LanguageTokenPrefixEquipment;
             EquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
             EquipmentDef.name = prefix + EquipmentLangTokenName;
             EquipmentDef.nameToken = prefix + EquipmentLangTokenName + "_NAME";

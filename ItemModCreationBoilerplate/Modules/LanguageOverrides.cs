@@ -9,6 +9,9 @@ namespace ItemModCreationBoilerplate.Modules
     internal class LanguageOverrides
     {
         public const string LanguageTokenPrefix = "ITEMBOILERPLATE_";
+        public const string LanguageTokenPrefixArtifact = LanguageTokenPrefix+"ARTIFACT_";
+        public const string LanguageTokenPrefixItem = LanguageTokenPrefix + "ITEM_";
+        public const string LanguageTokenPrefixEquipment = LanguageTokenPrefix + "EQUIPMENT_";
         public struct ReplacementToken
         {
             public string assignedToken;
