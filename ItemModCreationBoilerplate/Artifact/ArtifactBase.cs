@@ -142,7 +142,7 @@ namespace ItemModCreationBoilerplate.Artifact
         public abstract void OnArtifactEnabled();
         public abstract void OnArtifactDisabled();
 
-        public abstract void Hooks();
+        public virtual void Hooks() { }
 
         public Sprite LoadSprite(bool enabled)
         {
