@@ -1,0 +1,24 @@
+﻿{
+	strings: {
+		//[TIER1]
+		"BOILERPLATE_ITEM__NAME": "",
+		"BOILERPLATE_ITEM__PICKUP": "",
+		"BOILERPLATE_ITEM__DESCRIPTION": "",
+		"BOILERPLATE_ITEM__LOGBOOK_DESCRIPTION": "{0}",
+		"BOILERPLATE_ITEM__LORE": ""
+
+		//[TIER2]
+
+		//[TIER3]
+
+		//[TIERBOSS]
+
+		//[TIERLUNAR]
+
+		//[VOIDUNCOMMON]
+
+		//[VOIDLEGENDARY]
+
+		//[NOTIER]
+	}
+}

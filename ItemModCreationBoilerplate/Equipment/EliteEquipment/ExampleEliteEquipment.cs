@@ -12,15 +12,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
     {
         public override string EliteEquipmentName => "Their Instruction";
 
-        public override string EliteAffixToken => "AFFIX_EXAMPLE";
-
-        public override string EliteEquipmentPickupDesc => "Become an aspect of teaching.";
-
-        public override string EliteEquipmentFullDescription => "";
-
-        public override string EliteEquipmentLore => "";
-
-        public override string EliteModifier => "Tutorialized";
+        public override string EliteAffixToken => "AFFIXEXAMPLE";
 
         public override GameObject EliteEquipmentModel => new GameObject();
 

@@ -7,6 +7,8 @@ using static RoR2.CombatDirector;
 using UnityEngine;
 using System.Linq;
 using BepInEx.Configuration;
+using ItemModCreationBoilerplate.Modules;
+using RoR2.ExpansionManagement;
 
 namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 {
@@ -27,18 +29,31 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 
         /// <summary>
         /// The lang token that will be used in registering most of your strings.
-        /// <para>E.g.: AFFIX_HYPERCHARGED</para>
+        /// <para>E.g.: AFFIXHYPERCHARGED</para>
         /// </summary>
         public abstract string EliteAffixToken { get; }
-        public abstract string EliteEquipmentPickupDesc { get; }
-        public abstract string EliteEquipmentFullDescription { get; }
-        public abstract string EliteEquipmentLore { get; }
-
+        public virtual string EliteEquipmentPickupToken
+        {
+            get
+            {
+                return LanguageOverrides.LanguageTokenPrefixEliteEquipment + EliteAffixToken + "_PICKUP";
+            }
+        }
         /// <summary>
-        /// This is what appears before the name of the creature that has this elite status.
-        /// <para>E.g.: "Hypercharged Beetle" where Hypercharged is the modifier.</para>
+        /// Optional parameters for the Equipment Pickup Token
         /// </summary>
-        public abstract string EliteModifier { get; }
+        public virtual string[] EliteEquipmentPickupDescParams { get; }
+        public virtual string EquipmentDescriptionToken
+        {
+            get
+            {
+                return LanguageOverrides.LanguageTokenPrefixEquipment + EliteAffixToken + "_DESCRIPTION";
+            }
+        }
+        /// <summary>
+        /// Optional parameters for the Equipment Description Token
+        /// </summary>
+        public virtual string[] EliteEquipmentFullDescriptionParams { get; }
 
         public virtual bool AppearsInSinglePlayer { get; } = true;
 
@@ -49,10 +64,15 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
         public virtual float Cooldown { get; } = 60f;
 
         public virtual bool EnigmaCompatible { get; } = false;
+        public virtual bool CanBeRandomlyTriggered { get; } = true;
 
         public virtual bool IsBoss { get; } = false;
 
         public virtual bool IsLunar { get; } = false;
+        ///<summary>
+        ///The required ExpansionDef for this artifact.
+        ///</summary>
+        public virtual ExpansionDef ExpansionDef { get; }
 
         public abstract GameObject EliteEquipmentModel { get; }
         public abstract Sprite EliteEquipmentIcon { get; }
@@ -106,15 +126,30 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 
         protected void CreateLang()
         {
-            LanguageAPI.Add("ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME", EliteEquipmentName);
-            LanguageAPI.Add("ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP", EliteEquipmentName);
-            LanguageAPI.Add("ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION", EliteEquipmentName);
-            LanguageAPI.Add("ELITE_" + EliteAffixToken + "_MODIFIER", EliteModifier + " {0}");
+            bool formatPickup = EliteEquipmentPickupDescParams?.Length > 0;
+            //Main._logger.LogMessage("pickupCheck");
+            bool formatDescription = EliteEquipmentFullDescriptionParams?.Length > 0; //https://stackoverflow.com/a/41596301
+            //Main._logger.LogMessage("descCheck");
+            if (formatDescription && formatPickup)
+            {
+                //Main._logger.LogMessage("Nothing to format.");
+                return;
+            }
 
+            if (formatPickup)
+            {
+                LanguageOverrides.DeferToken(EliteEquipmentPickupToken, EliteEquipmentPickupDescParams);
+            }
+
+            if (formatDescription)
+            {
+                LanguageOverrides.DeferToken(EquipmentDescriptionToken, EliteEquipmentFullDescriptionParams);
+            }
         }
 
         protected void CreateEquipment()
         {
+            var prefix = LanguageOverrides.LanguageTokenPrefixEliteEquipment;
             EliteBuffDef = ScriptableObject.CreateInstance<BuffDef>();
             EliteBuffDef.name = EliteAffixToken;
             EliteBuffDef.buffColor = new Color32(255, 255, 255, byte.MaxValue);
@@ -122,10 +157,10 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
             EliteBuffDef.canStack = false;
 
             EliteEquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
-            EliteEquipmentDef.name = "ELITE_EQUIPMENT_" + EliteAffixToken;
-            EliteEquipmentDef.nameToken = "ELITE_EQUIPMENT_" + EliteAffixToken + "_NAME";
-            EliteEquipmentDef.pickupToken = "ELITE_EQUIPMENT_" + EliteAffixToken + "_PICKUP";
-            EliteEquipmentDef.descriptionToken = "ELITE_EQUIPMENT_" + EliteAffixToken + "_DESCRIPTION";
+            EliteEquipmentDef.name = prefix + EliteAffixToken;
+            EliteEquipmentDef.nameToken = prefix + EliteAffixToken + "_NAME";
+            EliteEquipmentDef.pickupToken = prefix + EliteAffixToken + "_PICKUP";
+            EliteEquipmentDef.descriptionToken = prefix + EliteAffixToken + "_DESCRIPTION";
             EliteEquipmentDef.pickupModelPrefab = EliteEquipmentModel;
             EliteEquipmentDef.pickupIconSprite = EliteEquipmentIcon;
             EliteEquipmentDef.appearsInSinglePlayer = AppearsInSinglePlayer;
@@ -136,6 +171,10 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
             EliteEquipmentDef.isBoss = IsBoss;
             EliteEquipmentDef.isLunar = IsLunar;
             EliteEquipmentDef.passiveBuffDef = EliteBuffDef;
+            EliteEquipmentDef.canBeRandomlyTriggered = false;
+            EliteEquipmentDef.dropOnDeathChance = 0.00025f;
+            EliteEquipmentDef.requiredExpansion = null;
+            EliteEquipmentDef.unlockableDef = null;
 
             ItemAPI.Add(new CustomEquipment(EliteEquipmentDef, CreateItemDisplayRules()));
 

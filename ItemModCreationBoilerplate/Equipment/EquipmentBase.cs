@@ -8,6 +8,7 @@ using System.Linq;
 using BepInEx.Configuration;
 using ItemModCreationBoilerplate.Modules;
 using BepInEx;
+using RoR2.ExpansionManagement;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -29,7 +30,7 @@ namespace ItemModCreationBoilerplate.Equipment
         {
             get
             {
-                return "RISKOFBULLETSTORM_EQUIPMENT_" + EquipmentLangTokenName + "_PICKUP";
+                return LanguageOverrides.LanguageTokenPrefixEquipment + EquipmentLangTokenName + "_PICKUP";
             }
         }
         /// <summary>
@@ -40,7 +41,7 @@ namespace ItemModCreationBoilerplate.Equipment
         {
             get
             {
-                return "RISKOFBULLETSTORM_EQUIPMENT_" + EquipmentLangTokenName + "_DESCRIPTION";
+                return LanguageOverrides.LanguageTokenPrefixEquipment + EquipmentLangTokenName + "_DESCRIPTION";
             }
         }
         /// <summary>
@@ -94,6 +95,10 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public virtual UnlockableDef UnlockableDef { get; set; } = null;
         public virtual bool UnlockableDefAutoSetup { get; } = false;
+        ///<summary>
+        ///The required ExpansionDef for this artifact.
+        ///</summary>
+        public virtual ExpansionDef ExpansionDef { get; }
 
         /// <summary>
         /// This method structures your code execution of this class. An example implementation inside of it would be:
@@ -176,6 +181,10 @@ namespace ItemModCreationBoilerplate.Equipment
             EquipmentDef.isBoss = IsBoss;
             EquipmentDef.isLunar = IsLunar;
             EquipmentDef.canBeRandomlyTriggered = CanBeRandomlyTriggered;
+            if (ExpansionDef)
+            {
+                EquipmentDef.requiredExpansion = ExpansionDef;
+            }
 
             if (IsLunar)
             {

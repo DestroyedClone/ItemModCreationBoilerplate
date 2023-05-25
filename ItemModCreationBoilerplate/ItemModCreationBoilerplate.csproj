@@ -27,4 +27,35 @@
     </Reference>
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="language\ar\" />
+    <Folder Include="language\bg\" />
+    <Folder Include="language\cs\" />
+    <Folder Include="language\da\" />
+    <Folder Include="language\de\" />
+    <Folder Include="language\el\" />
+    <Folder Include="language\es-419\" />
+    <Folder Include="language\es\" />
+    <Folder Include="language\fi\" />
+    <Folder Include="language\fr\" />
+    <Folder Include="language\hu\" />
+    <Folder Include="language\it\" />
+    <Folder Include="language\ja\" />
+    <Folder Include="language\ko\" />
+    <Folder Include="language\nl\" />
+    <Folder Include="language\no\" />
+    <Folder Include="language\pl\" />
+    <Folder Include="language\pt-BR\" />
+    <Folder Include="language\pt\" />
+    <Folder Include="language\ro\" />
+    <Folder Include="language\ru\" />
+    <Folder Include="language\sv\" />
+    <Folder Include="language\th\" />
+    <Folder Include="language\tr\" />
+    <Folder Include="language\uk\" />
+    <Folder Include="language\vn\" />
+    <Folder Include="language\zh-CN\" />
+    <Folder Include="language\zh-TW\" />
+  </ItemGroup>
+
 </Project>

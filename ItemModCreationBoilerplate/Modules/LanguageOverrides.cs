@@ -12,6 +12,9 @@ namespace ItemModCreationBoilerplate.Modules
         public const string LanguageTokenPrefixArtifact = LanguageTokenPrefix+"ARTIFACT_";
         public const string LanguageTokenPrefixItem = LanguageTokenPrefix + "ITEM_";
         public const string LanguageTokenPrefixEquipment = LanguageTokenPrefix + "EQUIPMENT_";
+        public const string LanguageTokenPrefixEliteEquipment = LanguageTokenPrefix + "ELITE_EQUIPMENT_";
+
+        public const string LanguageTokenPrefixBuffs = LanguageTokenPrefix+"BUFF_";
         public struct ReplacementToken
         {
             public string assignedToken;

@@ -1,3 +1,4 @@
+using ItemModCreationBoilerplate.Modules;
 using System;
 using System.Runtime.CompilerServices;
 using UnityEngine;
@@ -33,7 +34,7 @@ namespace ItemModCreationBoilerplate
             [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
             internal static void BetterUICompat_Buffs()
             {
-                var prefix = "RISKOFBULLETSTORM_BUFF_";
+                var prefix = LanguageOverrides.LanguageTokenPrefixBuffs;
                 void RegisterBuffInfo(RoR2.BuffDef buffDef, string baseToken, string[] descTokenParams = null)
                 {
                     if (descTokenParams != null && descTokenParams.Length > 0)
