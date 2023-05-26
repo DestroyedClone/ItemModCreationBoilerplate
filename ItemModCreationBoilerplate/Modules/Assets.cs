@@ -88,20 +88,42 @@ namespace ItemModCreationBoilerplate.Modules
         {
             if (mainAssetBundle == null)
             {
-                using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RiskOfBulletstormRewrite.riskofbulletstormbundle"))
+                try
                 {
-                    mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
+                    using (var assetStream = Assembly.GetExecutingAssembly().GetManifestResourceStream("RiskOfBulletstormRewrite.riskofbulletstormbundle"))
+                    {
+                        mainAssetBundle = AssetBundle.LoadFromStream(assetStream);
+                    }
+                }
+                catch
+                {
+                    Main.ModLogger.LogError($"Assets.PopulateAssets failed to load assetbundle!");
                 }
             }
         }
         public static Sprite LoadSprite(string path)
         {
-            return mainAssetBundle.LoadAsset<Sprite>(path);
+            try
+            {
+                return mainAssetBundle.LoadAsset<Sprite>(path);
+            } catch
+            {
+                Main.ModLogger.LogError($"Assets.LoadSprite failed to load path \"{path}\", defaulting to Assets.NullSprite.");
+                return mainAssetBundle.LoadAsset<Sprite>(path);
+            }
         }
 
         public static GameObject LoadObject(string path)
         {
-            return mainAssetBundle.LoadAsset<GameObject>(path);
+            try
+            {
+                return mainAssetBundle.LoadAsset<GameObject>(path);
+            }
+            catch
+            {
+                Main.ModLogger.LogError($"Assets.LoadObject failed to load path \"{path}\", defaulting to Assets.NullModel.");
+                return mainAssetBundle.LoadAsset<GameObject>(path);
+            }
         }
     }
 }
