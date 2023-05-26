@@ -150,11 +150,10 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
         protected void CreateEquipment()
         {
             var prefix = LanguageOverrides.LanguageTokenPrefixEliteEquipment;
-            EliteBuffDef = ScriptableObject.CreateInstance<BuffDef>();
-            EliteBuffDef.name = EliteAffixToken;
-            EliteBuffDef.buffColor = new Color32(255, 255, 255, byte.MaxValue);
-            EliteBuffDef.iconSprite = EliteBuffIcon;
-            EliteBuffDef.canStack = false;
+            if (EliteBuffDef == null)
+            {
+                EliteBuffDef = Modules.Buffs.CreateEliteBuffDef(EliteAffixToken, new Color32(255, 255, 255, byte.MaxValue), null, EliteBuffIcon, null);
+            }
 
             EliteEquipmentDef = ScriptableObject.CreateInstance<EquipmentDef>();
             EliteEquipmentDef.name = prefix + EliteAffixToken;
