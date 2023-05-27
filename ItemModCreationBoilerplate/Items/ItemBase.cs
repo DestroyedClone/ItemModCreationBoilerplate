@@ -8,7 +8,6 @@ using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Items
 {
-
     // The directly below is entirely from TILER2 API (by ThinkInvis) specifically the Item module. Utilized to implement instancing for classes.
     // TILER2 API can be found at the following places:
     // https://github.com/ThinkInvis/RoR2-TILER2
@@ -25,10 +24,12 @@ namespace ItemModCreationBoilerplate.Items
             instance = this as T;
         }
     }
+
     public abstract class ItemBase
     {
         public abstract string ItemName { get; }
         public abstract string ItemLangTokenName { get; }
+
         public string ItemPickupToken
         {
             get
@@ -36,7 +37,9 @@ namespace ItemModCreationBoilerplate.Items
                 return LanguageOverrides.LanguageTokenPrefix + "ITEM_" + ItemLangTokenName + "_PICKUP";
             }
         }
+
         public virtual string[] ItemPickupDescParams { get; }
+
         public string ItemDescriptionToken
         {
             get
@@ -44,6 +47,7 @@ namespace ItemModCreationBoilerplate.Items
                 return LanguageOverrides.LanguageTokenPrefix + "ITEM_" + ItemLangTokenName + "_DESCRIPTION";
             }
         }
+
         public virtual string[] ItemFullDescriptionParams { get; }
 
         public virtual string ItemDescriptionLogbookToken
@@ -53,6 +57,7 @@ namespace ItemModCreationBoilerplate.Items
                 return LanguageOverrides.LanguageTokenPrefix + "ITEM_" + ItemLangTokenName + "_LOGBOOK_DESCRIPTION";
             }
         }
+
         public virtual string[] ItemLogbookDescriptionParams { get; }
 
         public abstract ItemTier Tier { get; }
@@ -72,6 +77,7 @@ namespace ItemModCreationBoilerplate.Items
         public virtual string ParentItemName { get; } = null;
         public virtual bool Hidden { get; } = false;
         public virtual bool ItemDescriptionLogbookOverride { get; } = false;
+
         public string ConfigCategory
         {
             get
@@ -92,7 +98,8 @@ namespace ItemModCreationBoilerplate.Items
         /// <param name="config">The config file that will be passed into this from the main class.</param>
         public abstract void Init(ConfigFile config);
 
-        public virtual void CreateConfig(ConfigFile config) { }
+        public virtual void CreateConfig(ConfigFile config)
+        { }
 
         protected virtual void CreateLang() //create lang (addtokens for nwo) -> modify lang (this will be kept later)
         {
@@ -127,6 +134,7 @@ namespace ItemModCreationBoilerplate.Items
         }
 
         public abstract ItemDisplayRuleDict CreateItemDisplayRules();
+
         protected void CreateItem()
         {
             if (AIBlacklisted)
@@ -164,7 +172,8 @@ namespace ItemModCreationBoilerplate.Items
             ItemAPI.Add(new CustomItem(ItemDef, CreateItemDisplayRules()));
         }
 
-        public virtual void Hooks() { }
+        public virtual void Hooks()
+        { }
 
         //Based on ThinkInvis' methods
         public int GetCount(CharacterBody body)
@@ -187,6 +196,7 @@ namespace ItemModCreationBoilerplate.Items
 
             return body.inventory.GetItemCount(itemDef);
         }
+
         public Sprite LoadSprite(string itemNameToken = "")
         {
             var token = itemNameToken == "" ? ItemLangTokenName : itemNameToken;

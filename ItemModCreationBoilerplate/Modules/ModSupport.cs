@@ -1,7 +1,5 @@
 using ItemModCreationBoilerplate.Modules;
-using System;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 
 namespace ItemModCreationBoilerplate
 {
@@ -18,6 +16,7 @@ namespace ItemModCreationBoilerplate
                 ModCompatRiskOfOptions.Init();
             }
         }
+
         internal class ModCompatBetterUI
         {
             public const string guid = "com.xoxfaby.BetterUI";
@@ -45,13 +44,12 @@ namespace ItemModCreationBoilerplate
                 }
             }
 
-
             [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
             internal static void BetterUICompat_ItemStats()
             {
-
             }
         }
+
         internal class ModCompatRiskOfOptions
         {
             internal const string guid = "com.rune580.riskofoptions";

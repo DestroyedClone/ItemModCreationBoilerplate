@@ -1,10 +1,7 @@
 ﻿using BepInEx.Configuration;
-using ItemModCreationBoilerplate.Utils;
 using R2API;
 using RoR2;
-using System;
 using UnityEngine;
-using static ItemModCreationBoilerplate.Main;
 
 namespace ItemModCreationBoilerplate.Items
 {
@@ -19,6 +16,7 @@ namespace ItemModCreationBoilerplate.Items
             (0.5f*100).ToString(),
             100.ToString()
         };
+
         public override string[] ItemPickupDescParams => new string[]
         {
             112345f.ToString()
@@ -40,7 +38,6 @@ namespace ItemModCreationBoilerplate.Items
 
         public override void CreateConfig(ConfigFile config)
         {
-
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -50,8 +47,6 @@ namespace ItemModCreationBoilerplate.Items
 
         public override void Hooks()
         {
-
         }
-
     }
 }

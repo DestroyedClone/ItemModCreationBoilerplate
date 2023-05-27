@@ -1,14 +1,13 @@
-﻿using RoR2;
+﻿using BepInEx.Configuration;
+using ItemModCreationBoilerplate.Modules;
 using R2API;
+using RoR2;
+using RoR2.ExpansionManagement;
 using System;
 using System.Collections.Generic;
-using System.Text;
-using static RoR2.CombatDirector;
-using UnityEngine;
 using System.Linq;
-using BepInEx.Configuration;
-using ItemModCreationBoilerplate.Modules;
-using RoR2.ExpansionManagement;
+using UnityEngine;
+using static RoR2.CombatDirector;
 
 namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 {
@@ -32,6 +31,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
         /// <para>E.g.: AFFIXHYPERCHARGED</para>
         /// </summary>
         public abstract string EliteAffixToken { get; }
+
         public virtual string EliteEquipmentPickupToken
         {
             get
@@ -39,10 +39,12 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
                 return LanguageOverrides.LanguageTokenPrefixEliteEquipment + EliteAffixToken + "_PICKUP";
             }
         }
+
         /// <summary>
         /// Optional parameters for the Equipment Pickup Token
         /// </summary>
         public virtual string[] EliteEquipmentPickupDescParams { get; }
+
         public virtual string EquipmentDescriptionToken
         {
             get
@@ -50,6 +52,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
                 return LanguageOverrides.LanguageTokenPrefixEquipment + EliteAffixToken + "_DESCRIPTION";
             }
         }
+
         /// <summary>
         /// Optional parameters for the Equipment Description Token
         /// </summary>
@@ -69,6 +72,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
         public virtual bool IsBoss { get; } = false;
 
         public virtual bool IsLunar { get; } = false;
+
         ///<summary>
         ///The required ExpansionDef for this artifact.
         ///</summary>
@@ -188,7 +192,6 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
             {
                 On.RoR2.CharacterBody.FixedUpdate += OverlayManager;
             }
-
         }
 
         private void OverlayManager(On.RoR2.CharacterBody.orig_FixedUpdate orig, CharacterBody self)
@@ -197,15 +200,15 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
             {
                 var eliteOverlayManagers = self.gameObject.GetComponents<EliteOverlayManager>();
                 EliteOverlayManager eliteOverlayManager = null;
-                if (!eliteOverlayManagers.Any()) 
-                { 
-                   eliteOverlayManager = self.gameObject.AddComponent<EliteOverlayManager>();
+                if (!eliteOverlayManagers.Any())
+                {
+                    eliteOverlayManager = self.gameObject.AddComponent<EliteOverlayManager>();
                 }
                 else
                 {
-                    foreach(EliteOverlayManager overlayManager in eliteOverlayManagers)
+                    foreach (EliteOverlayManager overlayManager in eliteOverlayManagers)
                     {
-                        if(overlayManager.EliteBuffDef == EliteBuffDef)
+                        if (overlayManager.EliteBuffDef == EliteBuffDef)
                         {
                             orig(self);
                             return;
@@ -224,9 +227,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
                     eliteOverlayManager.Overlay = overlay;
                     eliteOverlayManager.Body = self;
                     eliteOverlayManager.EliteBuffDef = EliteBuffDef;
-
                 }
-
             }
             orig(self);
         }
@@ -280,8 +281,6 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
             ContentAddition.AddBuffDef(EliteBuffDef);
         }
 
-
-
         protected bool PerformEquipmentAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, RoR2.EquipmentSlot self, EquipmentDef equipmentDef)
         {
             if (equipmentDef == EliteEquipmentDef)
@@ -304,14 +303,18 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
         public abstract void Hooks();
 
         #region Targeting Setup
+
         //Targeting Support
         public virtual bool UseTargeting { get; } = false;
+
         public GameObject TargetingIndicatorPrefabBase = null;
+
         public enum TargetingType
         {
             Enemies,
             Friendlies,
         }
+
         public virtual TargetingType TargetingTypeEnum { get; } = TargetingType.Enemies;
 
         //Based on MysticItem's targeting code.
@@ -335,6 +338,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
                         case (TargetingType.Enemies):
                             targetingComponent.ConfigureTargetFinderForEnemies(self);
                             break;
+
                         case (TargetingType.Friendlies):
                             targetingComponent.ConfigureTargetFinderForFriendlies(self);
                             break;
@@ -406,7 +410,6 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
                 TargetFinder.FilterOutGameObject(self.gameObject);
                 AdditionalBullseyeFunctionality(TargetFinder);
                 PlaceTargetingIndicator(TargetFinder.GetResults());
-
             }
 
             public void PlaceTargetingIndicator(IEnumerable<HurtBox> TargetFinderResults)

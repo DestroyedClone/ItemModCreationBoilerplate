@@ -2,13 +2,11 @@
 using ItemModCreationBoilerplate.Modules;
 using R2API;
 using RoR2;
-using System.Linq;
 using UnityEngine;
-using static ItemModCreationBoilerplate.Main;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
-    class ExampleEquipWithTargeting : EquipmentBase<ExampleEquipWithTargeting>
+    internal class ExampleEquipWithTargeting : EquipmentBase<ExampleEquipWithTargeting>
     {
         public override string EquipmentName => "Deprecate Me Equipment Targeting Edition";
 
@@ -31,7 +29,6 @@ namespace ItemModCreationBoilerplate.Equipment
 
         protected override void CreateConfig(ConfigFile config)
         {
-
         }
 
         /// <summary>

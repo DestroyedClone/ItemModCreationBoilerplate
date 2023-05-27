@@ -1,11 +1,7 @@
-﻿using ItemModCreationBoilerplate.Modules;
-using RoR2;
-using System;
+﻿using RoR2;
 using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
 using System.Linq;
-using static RoR2.MasterSpawnSlotController;
+using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -32,6 +28,7 @@ namespace ItemModCreationBoilerplate.Equipment
             self.targetIndicator.active = flag6;
             self.targetIndicator.targetTransform = (flag6 ? self.currentTarget.transformToIndicateAt : null);
         }
+
         public enum TargetFinderType
         {
             Enemies,
@@ -41,7 +38,9 @@ namespace ItemModCreationBoilerplate.Equipment
             Custom,
             None
         }
+
         public virtual TargetFinderType EquipmentTargetFinderType { get; } = TargetFinderType.None;
+
         protected void ConfigureTargetFinder(EquipmentSlot slot)
         {
             if (EquipmentTargetFinderType == TargetFinderType.Enemies
@@ -78,8 +77,8 @@ namespace ItemModCreationBoilerplate.Equipment
                     }
                 }
                 source = slot.targetFinder.GetResults().FirstOrDefault<HurtBox>();
-                IL_134:
-                    slot.currentTarget = new EquipmentSlot.UserTargetInfo(source);
+            IL_134:
+                slot.currentTarget = new EquipmentSlot.UserTargetInfo(source);
             }
             else if (EquipmentTargetFinderType == TargetFinderType.Pickups)
             {
@@ -95,19 +94,23 @@ namespace ItemModCreationBoilerplate.Equipment
                 slot.currentTarget = default;
             }
         }
+
         protected virtual void ConfigureTargetFinderCustom(EquipmentSlot equipmentSlot)
         {
             Main.ModLogger.LogWarning($"EquipmentBase.Targeting ConfigureTargetFinderCustom isn't set!");
         }
+
         protected virtual void SetCurrentTargetCustom(EquipmentSlot equipmentSlot)
         {
             Main.ModLogger.LogWarning($"EquipmentBase.Targeting SetCurrentTargetCustom isn't set!");
             equipmentSlot.currentTarget = new EquipmentSlot.UserTargetInfo(equipmentSlot.targetFinder.GetResults().FirstOrDefault<HurtBox>());
         }
+
         protected virtual void ConfigureTargetIndicator(EquipmentSlot equipmentSlot, EquipmentIndex targetingEquipmentIndex, GenericPickupController genericPickupController)
         {
             equipmentSlot.targetIndicator.visualizerPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/BossHunterIndicator");
         }
+
         public virtual bool ShouldAnticipateTarget(EquipmentSlot equipmentSlot)
         {
             if (EquipmentTargetFinderType == TargetFinderType.None || EquipmentTargetFinderType == TargetFinderType.Pickups)

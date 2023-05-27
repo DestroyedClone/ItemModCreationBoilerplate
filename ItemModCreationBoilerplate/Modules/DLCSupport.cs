@@ -24,6 +24,7 @@ namespace ItemModCreationBoilerplate.Modules
                         .FirstOrDefault(def => def.nameToken == "DLC1_NAME");
                 return sotvExpansionDef;
             }
+
             public static Dictionary<ItemDef, ItemDef> voidConversions = new Dictionary<ItemDef, ItemDef>();
 
             internal static void SetupContagiousItemManager(On.RoR2.Items.ContagiousItemManager.orig_Init orig)

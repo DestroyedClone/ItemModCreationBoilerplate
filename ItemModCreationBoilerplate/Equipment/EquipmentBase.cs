@@ -1,14 +1,11 @@
-﻿using RoR2;
-using R2API;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using System.Linq;
+﻿using BepInEx;
 using BepInEx.Configuration;
 using ItemModCreationBoilerplate.Modules;
-using BepInEx;
+using R2API;
+using RoR2;
 using RoR2.ExpansionManagement;
+using System;
+using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -22,10 +19,12 @@ namespace ItemModCreationBoilerplate.Equipment
             instance = this as T;
         }
     }
+
     public abstract partial class EquipmentBase
     {
         public abstract string EquipmentName { get; }
         public abstract string EquipmentLangTokenName { get; }
+
         public virtual string EquipmentPickupToken
         {
             get
@@ -33,10 +32,12 @@ namespace ItemModCreationBoilerplate.Equipment
                 return LanguageOverrides.LanguageTokenPrefixEquipment + EquipmentLangTokenName + "_PICKUP";
             }
         }
+
         /// <summary>
         /// Optional parameters for the Equipment Pickup Token
         /// </summary>
         public virtual string[] EquipmentPickupDescParams { get; }
+
         public virtual string EquipmentDescriptionToken
         {
             get
@@ -44,10 +45,12 @@ namespace ItemModCreationBoilerplate.Equipment
                 return LanguageOverrides.LanguageTokenPrefixEquipment + EquipmentLangTokenName + "_DESCRIPTION";
             }
         }
+
         /// <summary>
         /// Optional parameters for the Equipment Description Token
         /// </summary>
         public virtual string[] EquipmentFullDescriptionParams { get; }
+
         /// <summary>
         /// Primary Token for language.
         /// <para>Ex: "GAWK" => used in RBS_GAWK_NAME, RBS_GAWK_DESC, ETC</para>
@@ -76,11 +79,14 @@ namespace ItemModCreationBoilerplate.Equipment
         public virtual bool IsBoss { get; } = false;
 
         public virtual bool IsLunar { get; } = false;
+
         /// <summary>
         /// Can be randomly triggered by things such as Bottled Chaos
         /// </summary>
         public virtual bool CanBeRandomlyTriggered { get; } = true;
+
         public virtual Equipment.EquipmentBase DependentEquipment { get; } = null;
+
         /// <summary>
         /// The internal name of its parent equipment, so that when its Parent is disabled, so too will it as a child.
         /// <para>Ex: AppleConsumed has its ParentEquipmentName as "Apple". AppleConsumed loses its ability to be disabled and requires
@@ -95,6 +101,7 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public virtual UnlockableDef UnlockableDef { get; set; } = null;
         public virtual bool UnlockableDefAutoSetup { get; } = false;
+
         ///<summary>
         ///The required ExpansionDef for this artifact.
         ///</summary>
@@ -119,8 +126,9 @@ namespace ItemModCreationBoilerplate.Equipment
                 return "Equipment: " + EquipmentName;
             }
         }
-        protected virtual void CreateConfig(ConfigFile config){}
 
+        protected virtual void CreateConfig(ConfigFile config)
+        { }
 
         /// <summary>
         /// Take care to call base.CreateLang()!
@@ -208,7 +216,6 @@ namespace ItemModCreationBoilerplate.Equipment
             }
         }
 
-
         private bool PerformEquipmentAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, RoR2.EquipmentSlot self, EquipmentDef equipmentDef)
         {
             if (equipmentDef == EquipmentDef)
@@ -226,6 +233,7 @@ namespace ItemModCreationBoilerplate.Equipment
         }
 
         protected abstract bool ActivateEquipment(EquipmentSlot slot);
+
         public Sprite LoadSprite(string equipmentNameToken = "")
         {
             var token = equipmentNameToken == "" ? EquipmentLangTokenName : equipmentNameToken;
@@ -238,6 +246,7 @@ namespace ItemModCreationBoilerplate.Equipment
             return Assets.LoadObject($"{token}.prefab");
         }
 
-        public virtual void Hooks() { }
+        public virtual void Hooks()
+        { }
     }
 }

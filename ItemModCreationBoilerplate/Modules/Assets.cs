@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using RoR2;
-using UnityEngine.AddressableAssets;
+﻿using RoR2;
 using System.Reflection;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
 
 namespace ItemModCreationBoilerplate.Modules
 {
@@ -66,7 +63,9 @@ namespace ItemModCreationBoilerplate.Modules
             }
             return null;
         }
+
         public static AssetBundle mainAssetBundle;
+
         public static T LoadAsset<T>(string path)
         {
             return Addressables.LoadAssetAsync<T>(path).WaitForCompletion();
@@ -76,7 +75,7 @@ namespace ItemModCreationBoilerplate.Modules
         {
             UnlockableDef unlockableDef = ScriptableObject.CreateInstance<UnlockableDef>();
             unlockableDef.achievementIcon = icon;
-            unlockableDef.cachedName = unlockableDefPrefix+name;
+            unlockableDef.cachedName = unlockableDefPrefix + name;
             return unlockableDef;
         }
 
@@ -84,6 +83,7 @@ namespace ItemModCreationBoilerplate.Modules
         {
             PopulateAssets();
         }
+
         public static void PopulateAssets()
         {
             if (mainAssetBundle == null)
@@ -101,12 +101,14 @@ namespace ItemModCreationBoilerplate.Modules
                 }
             }
         }
+
         public static Sprite LoadSprite(string path)
         {
             try
             {
                 return mainAssetBundle.LoadAsset<Sprite>(path);
-            } catch
+            }
+            catch
             {
                 Main.ModLogger.LogError($"Assets.LoadSprite failed to load path \"{path}\", defaulting to Assets.NullSprite.");
                 return Assets.NullSprite;

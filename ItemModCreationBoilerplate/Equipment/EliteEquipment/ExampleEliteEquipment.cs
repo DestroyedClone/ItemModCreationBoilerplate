@@ -2,13 +2,11 @@
 using R2API;
 using RoR2;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 {
-    class ExampleEliteEquipment : EliteEquipmentBase<ExampleEliteEquipment>
+    internal class ExampleEliteEquipment : EliteEquipmentBase<ExampleEliteEquipment>
     {
         public override string EliteEquipmentName => "Their Instruction";
 
@@ -32,7 +30,6 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 
         private void CreateConfig(ConfigFile config)
         {
-
         }
 
         private void CreateEliteTiers()
@@ -69,7 +66,6 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 
         public override void Hooks()
         {
-
         }
 
         //If you want an on use effect, implement it here as you would with a normal equipment.

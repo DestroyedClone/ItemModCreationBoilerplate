@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Utils
@@ -62,7 +61,6 @@ namespace ItemModCreationBoilerplate.Utils
             }
 
             return pointArray;
-
         }
 
         /// <summary>

@@ -1,9 +1,7 @@
 ﻿using RoR2;
 using RoR2.Navigation;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Utils
@@ -118,7 +116,6 @@ namespace ItemModCreationBoilerplate.Utils
         {
             if (damageInfo.rejected || !damageInfo.attacker) { return null; }
 
-
             var attackerBody = damageInfo.attacker.GetComponent<CharacterBody>();
 
             if (attackerBody)
@@ -149,7 +146,6 @@ namespace ItemModCreationBoilerplate.Utils
                             return closestPointOnBounds + (Vector3.up * distanceAboveTarget);
                         }
                     }
-
                 }
             }
 

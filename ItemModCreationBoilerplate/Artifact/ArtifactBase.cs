@@ -4,8 +4,6 @@ using R2API;
 using RoR2;
 using RoR2.ExpansionManagement;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Artifact
@@ -32,6 +30,7 @@ namespace ItemModCreationBoilerplate.Artifact
         ///Language Token responsible for the localization.
         ///</summary>
         public abstract string ArtifactLangTokenName { get; }
+
         ///<summary>
         ///The auto-generated token for the description.
         ///</summary>
@@ -140,9 +139,11 @@ namespace ItemModCreationBoilerplate.Artifact
         }
 
         public abstract void OnArtifactEnabled();
+
         public abstract void OnArtifactDisabled();
 
-        public virtual void Hooks() { }
+        public virtual void Hooks()
+        { }
 
         public Sprite LoadSprite(bool enabled)
         {

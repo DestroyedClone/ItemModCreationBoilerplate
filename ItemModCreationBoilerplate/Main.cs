@@ -10,7 +10,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using UnityEngine;
 
 namespace ItemModCreationBoilerplate
 {
@@ -24,6 +23,7 @@ namespace ItemModCreationBoilerplate
         public const string ModGuid = "com.MyUsername.MyModName";
         public const string ModName = "My Mod's Title and if we see this exact name on Thunderstore we will deprecate your mod";
         public const string ModVer = "0.0.1";
+
         //For RiskOfOptions
         public const string ModDescription = "Mod Description";
 
@@ -90,12 +90,9 @@ namespace ItemModCreationBoilerplate
                 if (ValidateEliteEquipment(eliteEquipment, EliteEquipments))
                 {
                     eliteEquipment.Init(Config);
-
                 }
             }
-
         }
-
 
         /// <summary>
         /// A helper to easily set up and initialize an artifact from your artifact classes if the user has it enabled in their configuration files.

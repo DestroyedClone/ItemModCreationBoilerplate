@@ -2,7 +2,6 @@
 using R2API;
 using RoR2;
 using UnityEngine;
-using static ItemModCreationBoilerplate.Main;
 
 namespace ItemModCreationBoilerplate.Equipment
 {
@@ -26,7 +25,6 @@ namespace ItemModCreationBoilerplate.Equipment
 
         protected override void CreateConfig(ConfigFile config)
         {
-
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -38,7 +36,5 @@ namespace ItemModCreationBoilerplate.Equipment
         {
             return false;
         }
-
-
     }
 }

@@ -1,15 +1,10 @@
 ﻿using BepInEx.Configuration;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using UnityEngine;
-using UnityEngine.Networking;
 using RoR2;
-using static ItemModCreationBoilerplate.Main;
+using UnityEngine;
 
 namespace ItemModCreationBoilerplate.Artifact
 {
-    class ExampleArtifact : ArtifactBase<ExampleArtifact>
+    internal class ExampleArtifact : ArtifactBase<ExampleArtifact>
     {
         public override string ArtifactName => "Artifact of the Print Message";
 
