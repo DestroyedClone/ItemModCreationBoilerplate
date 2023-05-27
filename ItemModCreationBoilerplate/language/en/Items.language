@@ -2,8 +2,8 @@
 	strings: {
 		//[TIER1]
 		"BOILERPLATE_ITEM_DEPRECATE_ME_ITEM_NAME": "Deprecate Me!",
-		"BOILERPLATE_ITEM_DEPRECATE_ME_ITEM_PICKUP": "On pickup, deprecate.",
-		"BOILERPLATE_ITEM_DEPRECATE_ME_ITEM_DESCRIPTION": "+100% chance to deprecate.",
+		"BOILERPLATE_ITEM_DEPRECATE_ME_ITEM_PICKUP": "On pickup, deprecate. This is a number: {0}",
+		"BOILERPLATE_ITEM_DEPRECATE_ME_ITEM_DESCRIPTION": "+{0}% chance to deprecate on kill, for {1} damage.",
 		"BOILERPLATE_ITEM_DEPRECATE_ME_ITEM_LORE": "There was.",
 
 		"BOILERPLATE_ITEM__NAME": "",
