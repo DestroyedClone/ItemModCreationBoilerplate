@@ -250,8 +250,8 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
         protected void CreateElite()
         {
             EliteDef = ScriptableObject.CreateInstance<EliteDef>();
-            EliteDef.name = "ELITE_" + EliteAffixToken;
-            EliteDef.modifierToken = "ELITE_" + EliteAffixToken + "_MODIFIER";
+            EliteDef.name = LanguageOverrides.LanguageTokenPrefixElite + EliteAffixToken;
+            EliteDef.modifierToken = LanguageOverrides.LanguageTokenPrefixElite + EliteAffixToken + "_MODIFIER";
             EliteDef.eliteEquipmentDef = EliteEquipmentDef;
 
             var baseEliteTierDefs = EliteAPI.GetCombatDirectorEliteTiers();
