@@ -14,9 +14,11 @@ namespace ItemModCreationBoilerplate.Equipment
 
         public override string EquipmentLangTokenName => "DEPRECATE_ME_EQUIPMENT_TARGETING";
 
-        public override GameObject EquipmentModel => LoadModel();
+        public override GameObject EquipmentModel => Assets.NullModel;
 
-        public override Sprite EquipmentIcon => LoadSprite();
+        public override Sprite EquipmentIcon => Assets.NullSprite;
+
+        public override TargetFinderType EquipmentTargetFinderType => TargetFinderType.BossesWithRewards;
 
         public override void Init(ConfigFile config)
         {
@@ -38,11 +40,13 @@ namespace ItemModCreationBoilerplate.Equipment
         /// </summary>
         private void CreateTargetingIndicator()
         {
-            TargetingIndicatorPrefabBase = PrefabAPI.InstantiateClone(Resources.Load<GameObject>("Prefabs/WoodSpriteIndicator"), "ExampleIndicator", false);
-            TargetingIndicatorPrefabBase.GetComponentInChildren<SpriteRenderer>().sprite = Assets.LoadSprite("ExampleReticuleIcon.png");
+            /*
+            TargetingIndicatorPrefabBase = PrefabAPI.InstantiateClone(LegacyResourcesAPI.Load<GameObject>("Prefabs/WoodSpriteIndicator"), "ExampleIndicator", false);
+            //TargetingIndicatorPrefabBase.GetComponentInChildren<SpriteRenderer>().sprite = Assets.LoadSprite("ExampleReticuleIcon.png");
             TargetingIndicatorPrefabBase.GetComponentInChildren<SpriteRenderer>().color = Color.white;
             TargetingIndicatorPrefabBase.GetComponentInChildren<SpriteRenderer>().transform.rotation = Quaternion.identity;
-            TargetingIndicatorPrefabBase.GetComponentInChildren<TMPro.TextMeshPro>().color = new Color(0.423f, 1, 0.749f);
+            TargetingIndicatorPrefabBase.GetComponentInChildren<TMPro.TextMeshPro>().color = new Color(0.423f, 1, 0.749f);*/
+            //TargetingIndicatorPrefabBase = Assets.targetIndicatorBossHunter;
         }
 
         public override ItemDisplayRuleDict CreateItemDisplayRules()
@@ -52,23 +56,21 @@ namespace ItemModCreationBoilerplate.Equipment
 
         protected override bool ActivateEquipment(EquipmentSlot slot)
         {
-            //We check for the characterbody, and if that has an inputbank that we'll be getting our aimray from. If we don't have it, we don't continue.
-            if (!slot.characterBody || !slot.characterBody.inputBank) { return false; }
-
-            //Check for our targeting controller that we attach to the object if we have "Use Targeting" enabled.
-            var targetComponent = slot.GetComponent<TargetingControllerComponent>();
-
-            //Ensure we have a target component, and that component is reporting that we have an object targeted.
-            if (targetComponent && targetComponent.TargetObject)
+            HurtBox hurtBox = slot.currentTarget.hurtBox;
+            if (hurtBox)
             {
-                var chosenHurtbox = targetComponent.TargetFinder.GetResults().First();
-
-                //Here we would use said hurtbox for something. Could be anything from firing a projectile towards it, applying a buff/debuff to it. Anything you can think of.
-                if (chosenHurtbox)
+                slot.subcooldownTimer = 0.2f;
+                RoR2.Orbs.OrbManager.instance.AddOrb(new RoR2.Orbs.LightningStrikeOrb
                 {
-                    //stuff
-                }
-
+                    attacker = slot.gameObject,
+                    damageColorIndex = DamageColorIndex.Item,
+                    damageValue = slot.characterBody.damage * 10f,
+                    isCrit = Util.CheckRoll(slot.characterBody.crit, slot.characterBody.master),
+                    procChainMask = default,
+                    procCoefficient = 1f,
+                    target = hurtBox
+                });
+                slot.InvalidateCurrentTarget();
                 return true;
             }
             return false;
