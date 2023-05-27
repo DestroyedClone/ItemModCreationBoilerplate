@@ -207,14 +207,6 @@ namespace ItemModCreationBoilerplate.Equipment
                 On.RoR2.EquipmentSlot.UpdateTargets += EquipmentSlot_UpdateTargets;
             }
         }
-        public virtual bool ShouldAnticipateTarget(EquipmentSlot equipmentSlot)
-        {
-            if (EquipmentTargetFinderType == TargetFinderType.None || EquipmentTargetFinderType == TargetFinderType.Pickups)
-            {
-                return false;
-            }
-            return equipmentSlot.stock > 0;
-        }
 
 
         private bool PerformEquipmentAction(On.RoR2.EquipmentSlot.orig_PerformEquipmentAction orig, RoR2.EquipmentSlot self, EquipmentDef equipmentDef)

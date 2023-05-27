@@ -15,19 +15,22 @@ namespace ItemModCreationBoilerplate.Equipment
 
         private void EquipmentSlot_UpdateTargets(On.RoR2.EquipmentSlot.orig_UpdateTargets orig, EquipmentSlot self, EquipmentIndex targetingEquipmentIndex, bool userShouldAnticipateTarget)
         {
-            orig(self, targetingEquipmentIndex, userShouldAnticipateTarget);
-            if (targetingEquipmentIndex == EquipmentDef.equipmentIndex)
+            //https://github.com/ThinkInvis/RoR2-TinkersSatchel/blob/35a9445e2cacfac2d577590b378a45b4239689bd/Items/LunarEqp/MonkeysPaw.cs#L215-L217
+            if (targetingEquipmentIndex != EquipmentDef.equipmentIndex)
             {
-                ConfigureTargetFinder(self);
-                bool flag6 = self.currentTarget.transformToIndicateAt;
-                if (flag6)
-                {
-                    GenericPickupController pickupController = self.currentTarget.pickupController;
-                    ConfigureTargetIndicator(self, targetingEquipmentIndex, pickupController);
-                }
-                self.targetIndicator.active = flag6;
-                self.targetIndicator.targetTransform = (flag6 ? self.currentTarget.transformToIndicateAt : null);
+                orig(self, targetingEquipmentIndex, userShouldAnticipateTarget);
+                return;
             }
+
+            ConfigureTargetFinder(self);
+            bool flag6 = self.currentTarget.transformToIndicateAt;
+            if (flag6)
+            {
+                GenericPickupController pickupController = self.currentTarget.pickupController;
+                ConfigureTargetIndicator(self, targetingEquipmentIndex, pickupController);
+            }
+            self.targetIndicator.active = flag6;
+            self.targetIndicator.targetTransform = (flag6 ? self.currentTarget.transformToIndicateAt : null);
         }
         public enum TargetFinderType
         {
@@ -104,6 +107,14 @@ namespace ItemModCreationBoilerplate.Equipment
         protected virtual void ConfigureTargetIndicator(EquipmentSlot equipmentSlot, EquipmentIndex targetingEquipmentIndex, GenericPickupController genericPickupController)
         {
             equipmentSlot.targetIndicator.visualizerPrefab = LegacyResourcesAPI.Load<GameObject>("Prefabs/BossHunterIndicator");
+        }
+        public virtual bool ShouldAnticipateTarget(EquipmentSlot equipmentSlot)
+        {
+            if (EquipmentTargetFinderType == TargetFinderType.None || EquipmentTargetFinderType == TargetFinderType.Pickups)
+            {
+                return false;
+            }
+            return equipmentSlot.stock > 0;
         }
     }
 }
