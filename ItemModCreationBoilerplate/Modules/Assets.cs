@@ -109,7 +109,7 @@ namespace ItemModCreationBoilerplate.Modules
             } catch
             {
                 Main.ModLogger.LogError($"Assets.LoadSprite failed to load path \"{path}\", defaulting to Assets.NullSprite.");
-                return mainAssetBundle.LoadAsset<Sprite>(path);
+                return Assets.NullSprite;
             }
         }
 
@@ -122,7 +122,7 @@ namespace ItemModCreationBoilerplate.Modules
             catch
             {
                 Main.ModLogger.LogError($"Assets.LoadObject failed to load path \"{path}\", defaulting to Assets.NullModel.");
-                return mainAssetBundle.LoadAsset<GameObject>(path);
+                return Assets.NullModel;
             }
         }
     }
