@@ -10,11 +10,16 @@ namespace ItemModCreationBoilerplate.Modules
     {
         internal static void Initialize()
         {
-            On.RoR2.Items.ContagiousItemManager.Init += DLC1.SetupContagiousItemManager;
+            DLC1.Initialize();
         }
 
         internal class DLC1
         {
+            public static void Initialize()
+            {
+                On.RoR2.Items.ContagiousItemManager.Init += SetupContagiousItemManager;
+            }
+
             public static RoR2.ExpansionManagement.ExpansionDef sotvExpansionDef;
 
             public static RoR2.ExpansionManagement.ExpansionDef GetSOTVExpansionDef()
