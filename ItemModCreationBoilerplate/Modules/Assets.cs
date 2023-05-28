@@ -86,6 +86,9 @@ namespace ItemModCreationBoilerplate.Modules
 
         public static void PopulateAssets()
         {
+            // Don't know how to create/use an asset bundle, or don't have a unity project set up?
+            // Look here for info on how to set these up: https://github.com/KomradeSpectre/AetheriumMod/blob/rewrite-master/Tutorials/Item%20Mod%20Creation.md#unity-project
+            // (This is a bit old now, but the information on setting the unity asset bundle should be the same.)
             if (mainAssetBundle == null)
             {
                 try

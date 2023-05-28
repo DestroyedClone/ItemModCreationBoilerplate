@@ -22,9 +22,19 @@ namespace ItemModCreationBoilerplate.Equipment
 
     public abstract partial class EquipmentBase
     {
+        ///<summary>
+        ///Name of the equipment.
+        ///</summary>
         public abstract string EquipmentName { get; }
+
+        ///<summary>
+        ///Language Token Name responsible for the internals.
+        ///</summary>
         public abstract string EquipmentLangTokenName { get; }
 
+        ///<summary>
+        ///The auto-generated token for the pickup.
+        ///</summary>
         public virtual string EquipmentPickupToken
         {
             get
@@ -38,6 +48,9 @@ namespace ItemModCreationBoilerplate.Equipment
         /// </summary>
         public virtual string[] EquipmentPickupDescParams { get; }
 
+        ///<summary>
+        ///The auto-generated token for the description.
+        ///</summary>
         public virtual string EquipmentDescriptionToken
         {
             get
@@ -63,19 +76,32 @@ namespace ItemModCreationBoilerplate.Equipment
         /// </summary>
         public virtual string EquipmentUniqueDescriptionToken { get; }
 
+        ///<summary>
+        ///The equipment's pickup model.
+        ///</summary>
         public abstract GameObject EquipmentModel { get; }
+
+        ///<summary>
+        ///The equipment's icon sprite.
+        ///</summary>
         public abstract Sprite EquipmentIcon { get; }
 
         public virtual bool AppearsInSinglePlayer { get; } = true;
 
         public virtual bool AppearsInMultiPlayer { get; } = true;
 
+        /// <summary>
+        /// Whether or not this equipment is accessible in the droplist. Consider enabling for consumed items.
+        /// </summary>
         public virtual bool CanDrop { get; } = true;
 
         public virtual float Cooldown { get; } = 60f;
 
         public virtual bool EnigmaCompatible { get; } = true;
 
+        /// <summary>
+        /// Enables its pickupdisplay to use boss particles.
+        /// </summary>
         public virtual bool IsBoss { get; } = false;
 
         public virtual bool IsLunar { get; } = false;
@@ -89,8 +115,7 @@ namespace ItemModCreationBoilerplate.Equipment
 
         /// <summary>
         /// The internal name of its parent equipment, so that when its Parent is disabled, so too will it as a child.
-        /// <para>Ex: AppleConsumed has its ParentEquipmentName as "Apple". AppleConsumed loses its ability to be disabled and requires
-        /// Apple to be disabled.</para>
+        /// <para>Ex: AppleConsumed has its ParentEquipmentName as "Apple". AppleConsumed loses its ability to be disabled and requires Apple to be disabled.</para>
         /// </summary>
         public virtual string ParentEquipmentName { get; } = null;
 
@@ -211,7 +236,6 @@ namespace ItemModCreationBoilerplate.Equipment
             On.RoR2.EquipmentSlot.PerformEquipmentAction += PerformEquipmentAction;
             if (EquipmentTargetFinderType != TargetFinderType.None)// && TargetingIndicatorPrefabBase)
             {
-                //On.RoR2.EquipmentSlot.Update += UpdateTargeting;
                 On.RoR2.EquipmentSlot.UpdateTargets += EquipmentSlot_UpdateTargets;
             }
         }

@@ -27,9 +27,19 @@ namespace ItemModCreationBoilerplate.Items
 
     public abstract class ItemBase
     {
+        ///<summary>
+        ///Name of the item.
+        ///</summary>
         public abstract string ItemName { get; }
+
+        ///<summary>
+        ///Language Token Name responsible for the internals.
+        ///</summary>
         public abstract string ItemLangTokenName { get; }
 
+        ///<summary>
+        ///The auto-generated token for the pickup.
+        ///</summary>
         public string ItemPickupToken
         {
             get
@@ -38,8 +48,14 @@ namespace ItemModCreationBoilerplate.Items
             }
         }
 
+        ///<summary>
+        ///Parameters for formatting the pickup language token. Parameter amount passed <b>must equal</b> the amount of parameters in the token.
+        ///</summary>
         public virtual string[] ItemPickupDescParams { get; }
 
+        ///<summary>
+        ///The auto-generated token for the description.
+        ///</summary>
         public string ItemDescriptionToken
         {
             get
@@ -48,8 +64,36 @@ namespace ItemModCreationBoilerplate.Items
             }
         }
 
+        ///<summary>
+        ///Parameters for formatting the description language token. Parameter amount passed <b>must equal</b> the amount of parameters in the token.
+        ///</summary>
         public virtual string[] ItemFullDescriptionParams { get; }
 
+        ///<summary>
+        ///The auto-generated token for the lore.
+        ///</summary>
+        public virtual string ItemDescriptionLoreToken
+        {
+            get
+            {
+                return LanguageOverrides.LanguageTokenPrefix + "ITEM_" + ItemLangTokenName + "_LORE";
+            }
+        }
+
+        ///<summary>
+        ///Parameters for formatting the lore language token. Parameter amount passed <b>must equal</b> the amount of parameters in the token.
+        ///</summary>
+        public virtual string[] ItemLogbookLoreParams { get; }
+
+        /// <summary>
+        /// Whether to have a token override the Item's description in the Logbook.
+        /// <para>ItemDescriptionLogbookToken, ItemLogbookDescriptionParams</para>
+        /// </summary>
+        public virtual bool ItemDescriptionLogbookOverride { get; } = false;
+
+        ///<summary>
+        ///The auto-generated token for the logbook description override. Requires ItemDescriptionLogbookOverride enabled.
+        ///</summary>
         public virtual string ItemDescriptionLogbookToken
         {
             get
@@ -58,26 +102,74 @@ namespace ItemModCreationBoilerplate.Items
             }
         }
 
+        ///<summary>
+        ///Parameters for formatting the lore language token. Parameter amount passed <b>must equal</b> the amount of parameters in the token. Requires ItemDescriptionLogbookOverride enabled.
+        ///</summary>
         public virtual string[] ItemLogbookDescriptionParams { get; }
 
+        ///<summary>
+        ///The item's tier.
+        ///</summary>
         public abstract ItemTier Tier { get; }
+
+        ///<summary>
+        ///The item's ItemTags.
+        ///</summary>
         public virtual ItemTag[] ItemTags { get; set; } = new ItemTag[] { };
 
+        ///<summary>
+        ///The item's pickup model.
+        ///</summary>
         public abstract GameObject ItemModel { get; }
+
+        ///<summary>
+        ///The item's icon sprite.
+        ///</summary>
         public abstract Sprite ItemIcon { get; }
 
+        ///<summary>
+        ///The item's ItemDef.
+        ///</summary>
+
         public ItemDef ItemDef;
+        ///<summary>
+        ///<b>Survivors of the Void</b>
+        ///<br>The ItemDef that this is a corruption of.</br>
+        ///<para>Example: DeprecateMeVoid's ContagiousOwnerItemDef = DeprecateMe.instance.ItemDef</para>
+        ///</summary>
 
         public virtual ItemDef ContagiousOwnerItemDef { get; } = null;
 
+        /// <summary>
+        /// Whether or not this item can be stolen, dropped by an Umbra, etc.
+        /// </summary>
         public virtual bool CanRemove { get; } = true;
 
+        /// <summary>
+        /// Force sets the ItemTags to include AIBlacklist.
+        /// </summary>
         public virtual bool AIBlacklisted { get; set; } = false;
-        public virtual string ParentEquipmentName { get; } = null;
-        public virtual string ParentItemName { get; } = null;
-        public virtual bool Hidden { get; } = false;
-        public virtual bool ItemDescriptionLogbookOverride { get; } = false;
 
+        /// <summary>
+        /// The internal name of its parent equipment, so that when its Parent is disabled, so too will it as a child.
+        /// <para>Ex: AppleConsumed has its ParentEquipmentName as "Apple". AppleConsumed loses its ability to be disabled and requires Apple to be disabled.</para>
+        /// </summary>
+        public virtual string ParentEquipmentName { get; } = null;
+
+        /// <summary>
+        /// The internal name of its parent item, so that when its Parent is disabled, so too will it as a child.
+        /// <para>Ex: UseOnLowHealthItemConsumed has its ParentItemName as "UseOnLowHealthItem". UseOnLowHealthItemConsumed loses its ability to be disabled and requires UseOnLowHealthItem to be disabled.</para>
+        /// </summary>
+        public virtual string ParentItemName { get; } = null;
+
+        /// <summary>
+        /// Whether to hide this item in the inventory display, such as for internal items or tally items that need to persist across stages (MonsoonPlayerHelper).
+        /// </summary>
+        public virtual bool Hidden { get; } = false;
+
+        /// <summary>
+        /// Autogenerated category name for the config.
+        /// </summary>
         public string ConfigCategory
         {
             get
@@ -101,6 +193,9 @@ namespace ItemModCreationBoilerplate.Items
         public virtual void CreateConfig(ConfigFile config)
         { }
 
+        /// <summary>
+        /// Responsible for handling token deferring.
+        /// </summary>
         protected virtual void CreateLang() //create lang (addtokens for nwo) -> modify lang (this will be kept later)
         {
             bool formatPickup = ItemPickupDescParams?.Length > 0;
@@ -197,12 +292,22 @@ namespace ItemModCreationBoilerplate.Items
             return body.inventory.GetItemCount(itemDef);
         }
 
+        /// <summary>
+        /// Loads an item Sprite from the AssetBundle.
+        /// </summary>
+        /// <param name="itemNameToken">langNameToken for the item. Defaults to current Item's langNameToken.</param>
+        /// <returns></returns>
         public Sprite LoadSprite(string itemNameToken = "")
         {
             var token = itemNameToken == "" ? ItemLangTokenName : itemNameToken;
             return Assets.LoadSprite($"ITEM_{token}");
         }
 
+        /// <summary>
+        /// Loads a GameObject from the AssetBundle.
+        /// </summary>
+        /// <param name="itemNameToken">langNameToken for the item. Defaults to current Item's langNameToken.</param>
+        /// <returns></returns>
         public GameObject LoadModel(string itemNameToken = "")
         {
             var token = itemNameToken == "" ? ItemLangTokenName : itemNameToken;
