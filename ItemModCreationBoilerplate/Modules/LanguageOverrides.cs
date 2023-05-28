@@ -144,7 +144,7 @@ namespace ItemModCreationBoilerplate.Modules
                 catch
                 {
                     Main.ModLogger.LogError($"Failed to load replacement token {replacementToken.assignedToken}"
-                    + $"Params: {replacementToken.args.ToString()}");
+                    + $"Params: {replacementToken.args}");
                 }
             }
         }

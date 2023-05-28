@@ -13,12 +13,12 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
 {
     public abstract class EliteEquipmentBase<T> : EliteEquipmentBase where T : EliteEquipmentBase<T>
     {
-        public static T instance { get; private set; }
+        public static T Instance { get; private set; }
 
         public EliteEquipmentBase()
         {
-            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting EliteEquipmentBase was instantiated twice");
-            instance = this as T;
+            if (Instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting EliteEquipmentBase was instantiated twice");
+            Instance = this as T;
         }
     }
 
@@ -383,8 +383,7 @@ namespace ItemModCreationBoilerplate.Equipment.EliteEquipment
                 TargetFinder.teamMaskFilter.RemoveTeam(self.characterBody.teamComponent.teamIndex);
                 TargetFinder.sortMode = BullseyeSearch.SortMode.Angle;
                 TargetFinder.filterByLoS = true;
-                float num;
-                Ray ray = CameraRigController.ModifyAimRayIfApplicable(self.GetAimRay(), self.gameObject, out num);
+                Ray ray = CameraRigController.ModifyAimRayIfApplicable(self.GetAimRay(), self.gameObject, out float _);
                 TargetFinder.searchOrigin = ray.origin;
                 TargetFinder.searchDirection = ray.direction;
                 TargetFinder.maxAngleFilter = 10f;

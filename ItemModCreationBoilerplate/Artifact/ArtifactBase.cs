@@ -10,12 +10,12 @@ namespace ItemModCreationBoilerplate.Artifact
 {
     public abstract class ArtifactBase<T> : ArtifactBase where T : ArtifactBase<T>
     {
-        public static T instance { get; private set; }
+        public static T Instance { get; private set; }
 
         public ArtifactBase()
         {
-            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting ArtifactBase was instantiated twice");
-            instance = this as T;
+            if (Instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting ArtifactBase was instantiated twice");
+            Instance = this as T;
         }
     }
 

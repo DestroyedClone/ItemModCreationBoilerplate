@@ -13,7 +13,7 @@ namespace ItemModCreationBoilerplate.Utils
         public static T GetObjectFromNetIdValue<T>(uint netIdValue)
         {
             NetworkInstanceId netInstanceId = new NetworkInstanceId(netIdValue);
-            NetworkIdentity foundNetworkIdentity = null;
+            NetworkIdentity foundNetworkIdentity;
             if (NetworkServer.active)
             {
                 NetworkServer.objects.TryGetValue(netInstanceId, out foundNetworkIdentity);
@@ -32,7 +32,7 @@ namespace ItemModCreationBoilerplate.Utils
                 }
             }
 
-            return default(T);
+            return default;
         }
     }
 }

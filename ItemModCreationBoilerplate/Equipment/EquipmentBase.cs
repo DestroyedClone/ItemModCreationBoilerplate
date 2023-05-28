@@ -11,12 +11,12 @@ namespace ItemModCreationBoilerplate.Equipment
 {
     public abstract class EquipmentBase<T> : EquipmentBase where T : EquipmentBase<T>
     {
-        public static T instance { get; private set; }
+        public static T Instance { get; private set; }
 
         public EquipmentBase()
         {
-            if (instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting EquipmentBoilerplate/Equipment was instantiated twice");
-            instance = this as T;
+            if (Instance != null) throw new InvalidOperationException("Singleton class \"" + typeof(T).Name + "\" inheriting EquipmentBoilerplate/Equipment was instantiated twice");
+            Instance = this as T;
         }
     }
 

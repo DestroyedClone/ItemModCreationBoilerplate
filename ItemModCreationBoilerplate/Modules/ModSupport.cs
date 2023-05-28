@@ -33,14 +33,13 @@ namespace ItemModCreationBoilerplate
             [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
             internal static void BetterUICompat_Buffs()
             {
-                var prefix = LanguageOverrides.LanguageTokenPrefixBuffs;
                 void RegisterBuffInfo(RoR2.BuffDef buffDef, string baseToken, string[] descTokenParams = null)
                 {
                     if (descTokenParams != null && descTokenParams.Length > 0)
                     {
-                        Modules.LanguageOverrides.DeferToken(prefix + baseToken + "_DESC", descTokenParams);
+                        Modules.LanguageOverrides.DeferToken(LanguageOverrides.LanguageTokenPrefixBuffs + baseToken + "_DESC", descTokenParams);
                     }
-                    BetterUI.Buffs.RegisterBuffInfo(buffDef, prefix + baseToken + "_NAME", prefix + baseToken + "_DESC");
+                    BetterUI.Buffs.RegisterBuffInfo(buffDef, LanguageOverrides.LanguageTokenPrefixBuffs + baseToken + "_NAME", LanguageOverrides.LanguageTokenPrefixBuffs + baseToken + "_DESC");
                 }
             }
 

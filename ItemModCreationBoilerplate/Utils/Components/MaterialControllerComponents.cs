@@ -78,6 +78,7 @@ namespace ItemModCreationBoilerplate.Utils.Components
             }
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Prefixed _ to set order variables in RuntimeInspector")]
         public class HGStandardController : MonoBehaviour
         {
             public Material Material;
@@ -580,6 +581,7 @@ namespace ItemModCreationBoilerplate.Utils.Components
         /// Attach to anything, and feed in a material that has the hgcloudremap shader.
         /// You then gain access to manipulate this in any Runtime Inspector of your choice.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Prefixed _ to set order variables in RuntimeInspector")]
         public class HGCloudRemapController : MonoBehaviour
         {
             public Material Material;
@@ -853,6 +855,7 @@ namespace ItemModCreationBoilerplate.Utils.Components
         /// Attach to anything, and feed in a material that has the hgcloudintersectionremap shader.
         /// You then gain access to manipulate this in any Runtime Inspector of your choice.
         /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Prefixed _ to set order variables in RuntimeInspector")]
         public class HGIntersectionController : MonoBehaviour
         {
             public Material Material;
