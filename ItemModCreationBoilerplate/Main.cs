@@ -60,28 +60,31 @@ namespace ItemModCreationBoilerplate
                 }
             }
 
-            //This section automatically scans the project for all items
-            var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
-
-            foreach (var itemType in ItemTypes)
-            {
-                ItemBase item = (ItemBase)System.Activator.CreateInstance(itemType);
-                if (ValidateItem(item, Items))
-                {
-                    item.Init(Config);
-                }
-            }
-
             //this section automatically scans the project for all equipment
             var EquipmentTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(EquipmentBase)));
+            var loadedEquipmentNames = new List<string>();
+            var childEquipmentTypes = new List<EquipmentBase>();
 
             foreach (var equipmentType in EquipmentTypes)
             {
                 EquipmentBase equipment = (EquipmentBase)System.Activator.CreateInstance(equipmentType);
+                if (equipment.ParentEquipmentName != null)
+                {
+                    childEquipmentTypes.Add(equipment);
+                    continue;
+                }
+
                 if (ValidateEquipment(equipment, Equipments))
                 {
                     equipment.Init(Config);
+                    loadedEquipmentNames.Add(equipment.EquipmentName);
                 }
+            }
+
+            foreach (var childEquip in childEquipmentTypes)
+            {
+                if (loadedEquipmentNames.Contains(childEquip.ParentEquipmentName))
+                    childEquip.Init(Config);
             }
 
             //this section automatically scans the project for all elite equipment
@@ -95,6 +98,39 @@ namespace ItemModCreationBoilerplate
                     eliteEquipment.Init(Config);
                 }
             }
+
+            //This section automatically scans the project for all items
+            var ItemTypes = Assembly.GetExecutingAssembly().GetTypes().Where(type => !type.IsAbstract && type.IsSubclassOf(typeof(ItemBase)));
+            var loadedItemNames = new List<string>();
+            var childItemTypes = new List<ItemBase>();
+
+            foreach (var itemType in ItemTypes)
+            {
+                ItemBase item = (ItemBase)System.Activator.CreateInstance(itemType);
+                if (item.ParentEquipmentName != null || item.ParentItemName != null)
+                {
+                    childItemTypes.Add(item);
+                    continue;
+                }
+                if (ValidateItem(item, Items))
+                {
+                    item.Init(Config);
+                    loadedItemNames.Add(item.ItemName);
+                }
+            }
+
+            foreach (var childItem in childItemTypes)
+            {
+                if (loadedItemNames.Contains(childItem.ParentItemName)
+                || loadedEquipmentNames.Contains(childItem.ParentEquipmentName))
+                {
+                    //dependent children dont have rights, no validation.
+                    //if (ValidateItem(childItem, Items))
+                    {
+                        childItem.Init(Config);
+                    }
+                }
+            }
         }
 
         /// <summary>
@@ -104,7 +140,7 @@ namespace ItemModCreationBoilerplate
         /// <param name="artifactList">The list you would like to add this to if it passes the config check.</param>
         public bool ValidateArtifact(ArtifactBase artifact, List<ArtifactBase> artifactList)
         {
-            var enabled = Config.Bind<bool>("Artifact: " + artifact.ArtifactName, "Enable Artifact?", true, "Should this artifact appear for selection?").Value;
+            var enabled = Config.Bind("Artifact: " + artifact.ArtifactName, "Enable Artifact?", true, "Should this artifact appear for selection?").Value;
 
             if (enabled)
             {
@@ -121,8 +157,9 @@ namespace ItemModCreationBoilerplate
         /// <param name="itemList">The list you would like to add this to if it passes the config check.</param>
         public bool ValidateItem(ItemBase item, List<ItemBase> itemList)
         {
-            var enabled = Config.Bind<bool>("Item: " + item.ItemName, "Enable Item?", true, "Should this item appear in runs?").Value;
-            var aiBlacklist = Config.Bind<bool>("Item: " + item.ItemName, "Blacklist Item from AI Use?", false, "Should the AI not be able to obtain this item?").Value;
+            var enabled = Config.Bind(item.ConfigCategory, "Enable Item?", true, "Should this item appear in runs?").Value;
+            bool itemAlreadyHasBlacklist = item.ItemTags.Contains(RoR2.ItemTag.AIBlacklist);
+            var aiBlacklist = Config.Bind(item.ConfigCategory, "Blacklist Item from AI Use?", itemAlreadyHasBlacklist, "Should the AI not be able to obtain this item?").Value;
             if (enabled)
             {
                 itemList.Add(item);
