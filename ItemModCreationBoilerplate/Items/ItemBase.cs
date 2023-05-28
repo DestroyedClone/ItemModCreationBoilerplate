@@ -72,7 +72,7 @@ namespace ItemModCreationBoilerplate.Items
         ///<summary>
         ///The auto-generated token for the lore.
         ///</summary>
-        public virtual string ItemDescriptionLoreToken
+        public virtual string ItemLoreToken
         {
             get
             {
@@ -83,7 +83,7 @@ namespace ItemModCreationBoilerplate.Items
         ///<summary>
         ///Parameters for formatting the lore language token. Parameter amount passed <b>must equal</b> the amount of parameters in the token.
         ///</summary>
-        public virtual string[] ItemLogbookLoreParams { get; }
+        public virtual string[] ItemLoreParams { get; }
 
         /// <summary>
         /// Whether to have a token override the Item's description in the Logbook.
@@ -201,7 +201,8 @@ namespace ItemModCreationBoilerplate.Items
             bool formatPickup = ItemPickupDescParams?.Length > 0;
             bool formatDescription = ItemFullDescriptionParams?.Length > 0; //https://stackoverflow.com/a/41596301
             bool formatLogbook = ItemLogbookDescriptionParams?.Length > 0;
-            if (!formatDescription && !formatPickup && !formatLogbook)
+            bool formatLore = ItemLoreParams?.Length > 0;
+            if (!formatDescription && !formatPickup && !formatLogbook && !formatLore)
             {
                 //Main._logger.LogMessage("Nothing to format.");
                 return;
@@ -222,6 +223,11 @@ namespace ItemModCreationBoilerplate.Items
                 LanguageOverrides.DeferToken(ItemDescriptionLogbookToken, ItemLogbookDescriptionParams);
             }
 
+            if (formatLore)
+            {
+                LanguageOverrides.DeferToken(ItemLoreToken, ItemLoreParams);
+            }
+
             if (ItemDescriptionLogbookOverride || formatLogbook)
             {
                 LanguageOverrides.logbookTokenOverrideDict.Add(ItemDescriptionToken, ItemDescriptionLogbookToken);
@@ -232,18 +238,13 @@ namespace ItemModCreationBoilerplate.Items
 
         protected void CreateItem()
         {
-            if (AIBlacklisted)
-            {
-                ItemTags = new List<ItemTag>(ItemTags) { ItemTag.AIBlacklist }.ToArray();
-            }
-
             var prefix = LanguageOverrides.LanguageTokenPrefixItem;
             ItemDef = ScriptableObject.CreateInstance<ItemDef>();
             ItemDef.name = prefix + ItemLangTokenName;
             ItemDef.nameToken = prefix + ItemLangTokenName + "_NAME";
-            ItemDef.pickupToken = prefix + ItemLangTokenName + "_PICKUP";
-            ItemDef.descriptionToken = prefix + ItemLangTokenName + "_DESCRIPTION";
-            ItemDef.loreToken = prefix + ItemLangTokenName + "_LORE";
+            ItemDef.pickupToken = ItemPickupToken;
+            ItemDef.descriptionToken = ItemDescriptionToken;
+            ItemDef.loreToken = ItemLoreToken;
             ItemDef.pickupModelPrefab = ItemModel;
             ItemDef.pickupIconSprite = ItemIcon;
             ItemDef.hidden = Hidden;
@@ -263,6 +264,10 @@ namespace ItemModCreationBoilerplate.Items
             }
 
             if (ItemTags.Length > 0) { ItemDef.tags = ItemTags; }
+            if (AIBlacklisted)
+            {
+                HG.ArrayUtils.ArrayAppend(ref ItemDef.tags, ItemTag.AIBlacklist);
+            }
 
             ItemAPI.Add(new CustomItem(ItemDef, CreateItemDisplayRules()));
         }
